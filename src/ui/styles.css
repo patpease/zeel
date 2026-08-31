@@ -311,15 +311,35 @@ h1, h2, h3, p, figure {
   border: 1px solid var(--border);
   border-radius: 6px;
   overflow: hidden;
+
+  /*
+   * Both toggle groups share one height, derived rather than typed twice.
+   * The icon buttons set the size — a 17px glyph with 0.3rem above and below —
+   * and the text buttons match it.
+   *
+   * Without this the text buttons inherit the body's 1.55 line-height and come
+   * out 11px taller than the icon buttons sitting next to them. Deriving the
+   * height from the glyph means a change to the body's leading, or to the icon
+   * size, cannot pull the two groups apart again.
+   */
+  --toggle-glyph: 17px;
+  --toggle-pad-y: 0.3rem;
+  --toggle-height: calc(var(--toggle-glyph) + var(--toggle-pad-y) * 2);
 }
 
 .unit-toggle button {
-  padding: 0.4rem 0.9rem;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-height: var(--toggle-height);
+  padding: 0 0.9rem;
   border: 0;
   background: var(--surface);
   color: var(--ink-muted);
   font: inherit;
   font-weight: 600;
+  /* Flex centring places the text; leading would only fight the shared height. */
+  line-height: 1;
   cursor: pointer;
 }
 
@@ -330,11 +350,7 @@ h1, h2, h3, p, figure {
 }
 
 .theme-toggle button {
-  display: inline-flex;
-  align-items: center;
-  justify-content: center;
-  padding: 0.3rem 0.45rem;
-  line-height: 1;
+  padding: 0 0.45rem;
 }
 
 .theme-toggle .icon {
