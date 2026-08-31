@@ -1,0 +1,20 @@
+<svg viewBox="0 0 70 70" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="ZEEL">
+  <!--
+    PLACEHOLDER product mark. Replace this file and nothing else changes —
+    App.tsx inlines it at build time.
+
+    It follows the sub-brand rule so the placeholder is at least structurally
+    right: a filled 70x70 tile with one ground, one curve, one rule and one
+    point, all reading custom properties so the tile inverts as a unit between
+    themes. The glyph is a stack of zone bands of unequal weight — the tool's
+    own subject, a programme whose parts are not the same size.
+  -->
+  <rect width="70" height="70" rx="8" fill="var(--mark-ground)" />
+  <g fill="var(--mark-curve)">
+    <rect x="14" y="17" width="42" height="6" rx="3" />
+    <rect x="14" y="28" width="27" height="6" rx="3" />
+    <rect x="14" y="39" width="34" height="6" rx="3" />
+  </g>
+  <rect x="14" y="52" width="42" height="3" rx="1.5" fill="var(--mark-rule)" />
+  <circle cx="56" cy="31" r="4" fill="var(--mark-point)" />
+</svg>

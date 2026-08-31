@@ -38,7 +38,8 @@ data/              Generated dataset.json. Committed; never hand-edit it.
 src/model/         Dataset types and the indexed loader.
 src/engine/        estimate(), compare(), spread(). Pure functions, no UI.
 src/units/         IP and SI. Converted at the boundary, nowhere else.
-test/              Consistency, schema, published-figure, engine and unit tests.
+src/ui/            Shell, theme, formatting. styles.css holds the whole palette.
+test/              Consistency, schema, published-figure, engine, unit, shell tests.
 source/            The 2019 workbooks. Gitignored — client job number, named engineers.
 ```
 
@@ -79,11 +80,42 @@ And a trap worth knowing: **the workbook's "Average" cells average signed
 errors.** The 12.97% it prints is not a mean absolute error — that is 16.4% as
 published, 15.3% recomputed. Never quote the workbook's average as accuracy.
 
+## The stylesheet is the palette, three times over
+
+Light on `:root`, dark inside a `prefers-color-scheme` query guarded with
+`:not([data-theme="light"])`, dark again on a bare `[data-theme="dark"]`. The
+guard is what lets an export container win over the viewer's system preference —
+without it a light-themed clone inside a dark page inherits dark tokens and the
+whole exercise is a no-op. Any new colour must be defined in all three.
+
+Surface, ink and accent are copied from Psychrometric Studio unchanged. The
+end-use hues are ZEEL's own: `--use-plug/fans/cooling/heating/dhw`.
+
+**`--use-*` is for fills and strokes only.** `--use-*-ink` is the text pairing.
+These hues are tuned to stay distinct from each other on a chart, which is a
+different problem from being readable on a ground, and several fail WCAG AA at
+label sizes. A legend swatch takes the hue; the words beside it take the ink.
+
+**The accent is never a series colour.** That is what keeps identity green and
+air green from ever appearing as two adjacent data marks.
+
+Fonts are self-hosted through `@fontsource` — the CSP allows no third-party
+origins, and a brand face that silently falls back to system-ui is not the brand.
+
+## Test environments are split
+
+Vitest runs in `node` by default, because most of the suite reads
+`data/dataset.json` off disk and under jsdom `import.meta.url` is an http URL
+that `readFileSync` rejects. A DOM test opts in with a
+`// @vitest-environment jsdom` docblock.
+
 ## Verifying a change
 
 ```bash
-npm run extract && npm test
+npm run extract && npm test && npm run build
 ```
+
+`npm run dev` serves on 5184, `npm run preview` on 4184.
 
 The golden tests check the extraction against artefacts that live *outside* the
 workbooks — all 126 measure results and 21 baseline intensities printed on the
