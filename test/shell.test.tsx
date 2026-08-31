@@ -5,6 +5,9 @@ import userEvent from '@testing-library/user-event';
 import { App } from '../src/ui/App.js';
 import { applyPreference, readPreference } from '../src/ui/theme.js';
 
+/** Scoped: every case chip also prints an EUI. */
+const headline = () => document.querySelector('.headline__value')?.textContent ?? '';
+
 describe('the shell', () => {
   it('states what the tool is for, without being asked', () => {
     render(<App />);
@@ -41,7 +44,7 @@ describe('the shell', () => {
   it('opens on the study’s own worked example', () => {
     render(<App />);
     expect(screen.getByText('115,000 sf')).toBeDefined();
-    expect(screen.getByText('133.0')).toBeDefined();
+    expect(headline()).toContain('133.0');
   });
 
   it('describes the spread as a range and never as a tolerance', () => {
@@ -65,13 +68,13 @@ describe('units', () => {
     const user = userEvent.setup();
     render(<App />);
 
-    expect(screen.getByText('133.0')).toBeDefined();
+    expect(headline()).toContain('133.0');
     expect(screen.getByText('115,000 sf')).toBeDefined();
 
     const units = screen.getByRole('group', { name: /unit system/i });
     await user.click(within(units).getByRole('button', { name: 'SI' }));
 
-    expect(screen.getByText('420')).toBeDefined();
+    expect(headline()).toContain('420');
     expect(screen.getByText('10,684 m²')).toBeDefined();
     // Scoped: the charts label their axes in the same unit.
     expect(document.querySelector('.headline__unit')?.textContent).toBe('kWh/m²/yr');

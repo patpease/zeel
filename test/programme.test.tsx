@@ -8,6 +8,8 @@ import { estimate } from '../src/engine/estimate.js';
 
 const areaField = (label: string) => screen.getByLabelText(new RegExp(`^${label} area`, 'i'));
 const total = () => screen.getByRole('row', { name: /^total/i });
+/** Scoped: every case chip also prints an EUI. */
+const headline = () => document.querySelector('.headline__value')?.textContent ?? '';
 
 describe('the worked examples', () => {
   it('reproduce the EUIs the study reported for them', () => {
@@ -27,11 +29,11 @@ describe('the worked examples', () => {
   it('swap the whole programme when pressed', async () => {
     const user = userEvent.setup();
     render(<App />);
-    expect(screen.getByText('133.0')).toBeDefined();
+    expect(headline()).toContain('133.0');
 
     await user.click(screen.getByRole('button', { name: /Reaching for 50/i }));
 
-    expect(screen.getByText('52.2')).toBeDefined();
+    expect(headline()).toContain('52.2');
     expect(within(total()).getByText('115,000')).toBeDefined();
     // The vivarium is gone in that programme, and the field has to show it.
     expect((areaField('Vivarium') as HTMLInputElement).value).toBe('');
@@ -42,7 +44,7 @@ describe('the worked examples', () => {
     render(<App />);
     await user.click(screen.getByRole('button', { name: /^Clear$/i }));
     expect(within(total()).getByText('0')).toBeDefined();
-    expect(screen.getByText('0.0')).toBeDefined();
+    expect(headline()).toContain('0.0');
   });
 });
 
@@ -55,13 +57,13 @@ describe('editing', () => {
     await user.clear(vivarium);
     // 4% of the area carrying 19% of the energy: removing it should move the
     // building hard, and this is the interaction that shows it.
-    expect(screen.getByText('112.4')).toBeDefined();
+    expect(headline()).toContain('112.4');
 
     // Doubling it instead: the building grows by 4% of floor area and gains
     // 19% more energy, so the intensity climbs rather than returning to 133.
     await user.type(vivarium, '9240');
     expect(vivarium.value).toBe('9240');
-    expect(screen.getByText('152.0')).toBeDefined();
+    expect(headline()).toContain('152.0');
   });
 
   it('accepts a number typed with thousands separators', async () => {

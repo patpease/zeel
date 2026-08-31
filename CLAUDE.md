@@ -115,6 +115,26 @@ floor area is spent on. Tests pin that.
 `revision`; `onReplace` is a wholesale swap and must. Collapsing them rewrites
 the field the user is typing in on every keystroke.
 
+## Two studies, because the dataset has two shapes
+
+Five climate zones at baseline, eight cases at 5A Boston, nothing in the
+intersection. The picker has two modes rather than one combined selector, and
+**says so on the control** — a greyed-out option leaves the reader wondering
+whether it is broken; a sentence saying measures were simulated at 5A only, and
+are never carried across, tells them it is a fact about the data.
+
+Switching study resets to the baseline, which both studies share. Keeping the
+previous case would show a measure labelled as a climate zone.
+
+Each chip carries its own result for the programme currently entered, so the
+comparison is legible before anything is clicked — which is also what makes the
+measure study rank itself.
+
+Change against a baseline is **polarity, not status**: a validated diverging pair
+either side of a neutral rule, with direction carried by which side a bar sits on
+as well as by colour. The comparison strip answers *which zones respond*, never
+how much anyone will save.
+
 ## Charts
 
 Two rules that are easy to break and expensive to notice late:

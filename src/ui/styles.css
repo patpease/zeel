@@ -77,6 +77,15 @@
   --group-general: #1F9B84;
   --group-auditorium: #3EC29D;
 
+  /*
+   * Change against a baseline is polarity, not status: two hues either side of a
+   * neutral rule. Validated as a pair — normal-vision ΔE 23.1, CVD 10.4, both
+   * clearing 3:1 on the surface. Direction is also carried by which side of the
+   * rule a bar sits on, so the encoding is never colour alone.
+   */
+  --delta-down: #008B77;
+  --delta-up: #C2610A;
+
   /* A note is advice about the programme; a warning is the data reporting a
      defect. Sharing one colour trains the reader to dismiss both. */
   --note: #2F6FA8;
@@ -135,6 +144,10 @@
     --group-special-lab: #3EBF93;
     --group-general: #2A9C7E;
     --group-auditorium: #1E7C6C;
+  --delta-down: #22A48E;
+  --delta-up: #C97E30;
+    --delta-down: #22A48E;
+    --delta-up: #C97E30;
 
     --note: #6CB0EE;
     --note-ink: #A9D2F5;
@@ -801,6 +814,107 @@ h1, h2, h3, p, figure {
   letter-spacing: 0;
 }
 
+/* ----------------------------------------------------------------- study */
+
+.study {
+  margin-bottom: 16px;
+}
+
+.study__modes {
+  display: inline-flex;
+  border: 1px solid var(--border);
+  border-radius: 6px;
+  overflow: hidden;
+  margin-bottom: 10px;
+}
+
+.study__modes button {
+  padding: 0.35rem 0.8rem;
+  border: 0;
+  background: var(--surface);
+  color: var(--ink-muted);
+  font: inherit;
+  font-size: 0.78rem;
+  font-weight: 600;
+  cursor: pointer;
+  line-height: 1.4;
+}
+
+.study__modes button.active {
+  background: var(--accent);
+  color: var(--surface);
+}
+
+.study__cases {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+}
+
+/* Each chip carries its own result for the programme entered, so the comparison
+   is legible before anything is clicked. */
+.case-chip {
+  display: inline-flex;
+  align-items: baseline;
+  gap: 7px;
+  font: inherit;
+  font-size: 0.78rem;
+  padding: 5px 10px;
+  border: 1px solid var(--border-strong);
+  border-radius: 100px;
+  background: var(--surface);
+  color: var(--ink);
+  cursor: pointer;
+}
+
+.case-chip:hover {
+  border-color: var(--accent);
+}
+
+.case-chip.is-selected {
+  border-color: var(--accent);
+  background: var(--accent-wash);
+  font-weight: 600;
+}
+
+/* The reverse measure is the only case that costs energy. It gets a dashed edge
+   so it reads as a different kind of thing before its number is examined. */
+.case-chip.is-reverse {
+  border-style: dashed;
+}
+
+.case-chip__eui {
+  font-family: 'IBM Plex Mono', ui-monospace, monospace;
+  font-variant-numeric: tabular-nums;
+  font-size: 0.74rem;
+  color: var(--ink-muted);
+}
+
+.case-chip__delta {
+  font-family: 'IBM Plex Mono', ui-monospace, monospace;
+  font-variant-numeric: tabular-nums;
+  font-size: 0.7rem;
+  font-weight: 600;
+  color: var(--delta-down);
+}
+
+.case-chip__delta.is-up {
+  color: var(--delta-up);
+}
+
+.study__note {
+  margin-top: 9px;
+  font-size: 0.76rem;
+  color: var(--ink-faint);
+  max-width: 62ch;
+}
+
+.caveat--note {
+  border-left-color: var(--note);
+  background: var(--note-bg);
+  color: var(--note-ink);
+}
+
 /* ---------------------------------------------------------------- charts */
 
 .chart {
@@ -869,6 +983,12 @@ h1, h2, h3, p, figure {
   font-size: 10px;
   fill: var(--ink);
   font-variant-numeric: tabular-nums;
+}
+
+/* A figure printed on its own bar takes the surface colour, so it reads against
+   the fill rather than against the page. */
+.chart__value--inside {
+  fill: var(--surface);
 }
 
 .chart__hit {

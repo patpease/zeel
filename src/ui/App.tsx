@@ -12,7 +12,9 @@ import { ProgrammeEditor } from './ProgrammeEditor.js';
 import { ZoneBars } from '../charts/ZoneBars.js';
 import { AreaEnergyRings } from '../charts/AreaEnergyRings.js';
 import { EnergyFlow } from '../charts/EnergyFlow.js';
-import { estimate } from '../engine/estimate.js';
+import { ComparisonStrip } from '../charts/ComparisonStrip.js';
+import { StudyPicker } from './StudyPicker.js';
+import { estimate, compare } from '../engine/estimate.js';
 import { spread } from '../engine/spread.js';
 import { dataset, getCase, getLocation } from '../model/dataset.js';
 import { getPreset, DEFAULT_PRESET_ID } from '../model/presets.js';
@@ -27,7 +29,15 @@ export function App() {
   const theme = useTheme();
   const { palette, setPaletteId } = usePalette(theme.resolved);
   const [units, setUnits] = useState<UnitSystem>('ip');
-  const [caseId] = useState('baseline');
+  const [studyId, setStudyId] = useState('climate');
+  const [caseId, setCaseId] = useState('baseline');
+
+  // Switching study returns to the baseline, which both studies share. Landing
+  // on the previous study's case would show a measure labelled as a climate.
+  const selectStudy = useCallback((next: string) => {
+    setStudyId(next);
+    setCaseId('baseline');
+  }, []);
 
   const [programme, setProgramme] = useState<Programme>(() => getPreset(DEFAULT_PRESET_ID).areas);
   // Bumped only when the programme is replaced wholesale — a preset or a paste —
@@ -43,6 +53,10 @@ export function App() {
   const energyByZone = useMemo(
     () => Object.fromEntries(result.zones.map((z) => [z.zoneId, z.energy])),
     [result],
+  );
+  const comparison = useMemo(
+    () => (caseId === 'baseline' ? null : compare(programme, 'baseline', caseId)),
+    [programme, caseId],
   );
   const observed = useMemo(() => spread(), []);
   const simulation = getCase(caseId);
@@ -153,6 +167,15 @@ export function App() {
             </span>
           </div>
 
+          <StudyPicker
+            programme={programme}
+            caseId={caseId}
+            studyId={studyId}
+            units={units}
+            onSelectStudy={selectStudy}
+            onSelectCase={setCaseId}
+          />
+
           <div className="headline">
             <p className="headline__label">Estimated EUI</p>
             <p className="headline__value">
@@ -187,6 +210,15 @@ export function App() {
             </div>
           </div>
 
+          {simulation.note && (
+            <div className="caveat caveat--note" role="note">
+              <span className="caveat__lead">
+                {simulation.kind === 'reverse-measure' ? 'A reverse measure' : 'About this case'}
+              </span>
+              <p>{simulation.note}</p>
+            </div>
+          )}
+
           {result.caveats.length > 0 && (
             <div className="caveat" role="note">
               <span className="caveat__lead">Known defect in the source data</span>
@@ -194,6 +226,7 @@ export function App() {
             </div>
           )}
 
+          {comparison && <ComparisonStrip comparison={comparison} units={units} />}
           <AreaEnergyRings result={result} />
           <EnergyFlow result={result} units={units} />
           <ZoneBars zones={result.zones} units={units} />
