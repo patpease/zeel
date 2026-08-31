@@ -80,6 +80,21 @@ And a trap worth knowing: **the workbook's "Average" cells average signed
 errors.** The 12.97% it prints is not a mean absolute error — that is 16.4% as
 published, 15.3% recomputed. Never quote the workbook's average as accuracy.
 
+## The chrome is Psychrometric Studio's, deliberately
+
+`.app-header`, `.brand`, `.unit-toggle` and `.theme-toggle` are matched to that
+tool's markup and CSS rather than reinvented: organisation eyebrow, product
+name, tagline, then IP/SI and a sun/moon pair on the right. Two tools in one
+suite should be recognisable as one suite, and the chrome is what someone reads
+first. If Psychrometric Studio's header changes, this one follows.
+
+One detail is easy to get wrong: the theme buttons track `theme.resolved`, not
+`theme.preference`. With no stored preference both would otherwise sit unlit and
+the control would look broken on a first visit. There is a test for it.
+
+`src/config/branding.ts` is the single source of truth for the name and tagline,
+mirroring that tool's `config/branding.ts`.
+
 ## The stylesheet is the palette, three times over
 
 Light on `:root`, dark inside a `prefers-color-scheme` query guarded with

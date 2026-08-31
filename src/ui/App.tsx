@@ -3,7 +3,9 @@ import { useMemo, useState } from 'react';
 // against the live theme. It is our own build-time asset, not user input.
 import markSvg from './mark.svg?raw';
 import { useTheme } from './theme.js';
-import { Segmented } from './Segmented.js';
+import type { ThemeChoice } from './theme.js';
+import { SunIcon, MoonIcon } from './Icon.js';
+import { BRAND } from '../config/branding.js';
 import { estimate } from '../engine/estimate.js';
 import { spread } from '../engine/spread.js';
 import { DEFAULT_PROGRAMME, dataset, getCase, getLocation } from '../model/dataset.js';
@@ -25,34 +27,64 @@ export function App() {
 
   return (
     <div className="app">
-      <header className="masthead">
-        {/* eslint-disable-next-line react/no-danger */}
-        <span className="masthead__mark" aria-hidden="true" dangerouslySetInnerHTML={{ __html: markSvg }} />
-        <div className="masthead__names">
-          <span className="masthead__wordmark">
-            ZEEL <span className="badge">Beta</span>
-          </span>
-          <span className="masthead__full">Zoned Energy Estimator for Labs</span>
+      <header className="app-header">
+        <div className="brand">
+          {/* Inlined rather than linked so the tile's custom properties resolve
+              against the live theme — one asset instead of a light and a dark
+              PNG. It is our own build-time file, not user input. */}
+          <span
+            className="brand-icon"
+            aria-hidden="true"
+            dangerouslySetInnerHTML={{ __html: markSvg }}
+          />
+          <div className="brand-text">
+            <span className="brand-org">{BRAND.organisation}</span>
+            <h1>
+              {BRAND.appName}
+              <span className="badge">Beta</span>
+            </h1>
+            <span className="brand-tagline">{BRAND.tagline}</span>
+          </div>
         </div>
 
-        <Segmented
-          label="Units"
-          value={units}
-          onChange={setUnits}
-          options={[
-            { value: 'ip', label: 'IP', title: 'Inch-pound: square feet and kBtu' },
-            { value: 'si', label: 'SI', title: 'Metric: square metres and kWh' },
-          ]}
-        />
-        <Segmented
-          label="Theme"
-          value={theme.preference ?? 'system'}
-          onChange={(next) => theme.setPreference(next === 'system' ? null : next)}
-          options={[
-            { value: 'light', label: 'Light' },
-            { value: 'dark', label: 'Dark' },
-          ]}
-        />
+        <div className="header-toggles">
+          <div className="unit-toggle" role="group" aria-label="Unit system">
+            {(['ip', 'si'] as UnitSystem[]).map((system) => (
+              <button
+                key={system}
+                type="button"
+                className={units === system ? 'active' : ''}
+                onClick={() => setUnits(system)}
+                aria-pressed={units === system}
+              >
+                {system.toUpperCase()}
+              </button>
+            ))}
+          </div>
+
+          {/* Two buttons for three states: no stored preference follows the
+              operating system, and pressing either pins it. The active button
+              tracks `resolved` rather than `preference`, so it always shows
+              what is actually being painted. See ui/theme.ts. */}
+          <div className="unit-toggle theme-toggle" role="group" aria-label="Appearance">
+            {([
+              { choice: 'light' as ThemeChoice, label: 'Light', Glyph: SunIcon },
+              { choice: 'dark' as ThemeChoice, label: 'Dark', Glyph: MoonIcon },
+            ]).map(({ choice, label, Glyph }) => (
+              <button
+                key={choice}
+                type="button"
+                className={theme.resolved === choice ? 'active' : ''}
+                onClick={() => theme.setPreference(choice)}
+                aria-pressed={theme.resolved === choice}
+                aria-label={`${label} appearance`}
+                title={`${label} appearance`}
+              >
+                <Glyph />
+              </button>
+            ))}
+          </div>
+        </div>
       </header>
 
       {/*

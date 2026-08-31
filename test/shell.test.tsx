@@ -19,6 +19,24 @@ describe('the shell', () => {
     expect(screen.getByText('Beta')).toBeDefined();
   });
 
+  it('wears the suite’s chrome — organisation, product, tagline', () => {
+    render(<App />);
+    expect(screen.getByText('Pease Studio')).toBeDefined();
+    expect(screen.getByRole('heading', { level: 1 }).textContent).toMatch(/ZEEL/);
+    expect(screen.getByText('Zoned Energy Estimator for Labs')).toBeDefined();
+  });
+
+  it('always lights the theme button that matches what is painted', () => {
+    render(<App />);
+    const themeGroup = screen.getByRole('group', { name: /appearance/i });
+    const pressed = within(themeGroup)
+      .getAllByRole('button')
+      .filter((b) => b.getAttribute('aria-pressed') === 'true');
+    // Even with no stored preference, one button reflects the resolved theme —
+    // an unlit pair would leave the control looking broken on first visit.
+    expect(pressed).toHaveLength(1);
+  });
+
   it('opens on the study’s own worked example', () => {
     render(<App />);
     expect(screen.getByText('115,000 sf')).toBeDefined();
@@ -49,7 +67,7 @@ describe('units', () => {
     expect(screen.getByText('133.0')).toBeDefined();
     expect(screen.getByText('115,000 sf')).toBeDefined();
 
-    const units = screen.getByRole('group', { name: /units/i });
+    const units = screen.getByRole('group', { name: /unit system/i });
     await user.click(within(units).getByRole('button', { name: 'SI' }));
 
     expect(screen.getByText('420')).toBeDefined();
@@ -69,8 +87,8 @@ describe('theme', () => {
     const user = userEvent.setup();
     render(<App />);
 
-    const themeGroup = screen.getByRole('group', { name: /theme/i });
-    await user.click(within(themeGroup).getByRole('button', { name: 'Dark' }));
+    const themeGroup = screen.getByRole('group', { name: /appearance/i });
+    await user.click(within(themeGroup).getByRole('button', { name: /dark appearance/i }));
 
     expect(document.documentElement.getAttribute('data-theme')).toBe('dark');
     expect(readPreference()).toBe('dark');
