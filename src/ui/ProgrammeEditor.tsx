@@ -1,37 +1,15 @@
 import { useEffect, useMemo, useState } from 'react';
 import type { Programme, ZoneId } from '../model/types.js';
-import { dataset, getCase } from '../model/dataset.js';
+import { GROUPS, ORDERED_ZONE_IDS } from '../model/groups.js';
+import { getCase } from '../model/dataset.js';
 import { PRESETS } from '../model/presets.js';
 import { area as areaUnit } from '../units/units.js';
 import type { UnitSystem } from '../units/units.js';
 import { formatEui } from './format.js';
 
-/**
- * Air systems in descending order of the energy they carry in the study's own
- * programme: labs 62%, vivarium 19%, general 11%, special labs 6%, auditorium 2%.
- *
- * The order is fixed rather than recomputed from whatever the user has typed.
- * Rows that reshuffle while someone is filling them in are unusable, and the
- * point of the ordering is to teach the shape of the problem before they start —
- * a reader who scrolls past "Lab / high energy" first has already been told
- * where a laboratory's energy goes.
- */
-const GROUP_ORDER = ['lab', 'vivarium', 'special-lab', 'general', 'auditorium'] as const;
-
 /** Grouping and intensities come from the baseline: the editor is about the
  *  programme, not about which case is selected. */
 const BASELINE = getCase('baseline');
-
-const GROUPS = GROUP_ORDER.map((groupId) => {
-  const group = dataset.fanGroups.find((g) => g.id === groupId);
-  if (!group) throw new Error(`Unknown fan group: ${groupId}`);
-  const zones = dataset.zones
-    .filter((z) => BASELINE.zones[z.id]?.fanGroup === groupId)
-    .sort((a, b) => (BASELINE.zones[b.id]?.eui ?? 0) - (BASELINE.zones[a.id]?.eui ?? 0));
-  return { ...group, zones };
-}).filter((g) => g.zones.length > 0);
-
-const ORDERED_ZONE_IDS: readonly ZoneId[] = GROUPS.flatMap((g) => g.zones.map((z) => z.id));
 
 /** Accepts "4,500", " 4500 ", "4500.5"; rejects anything else. */
 function parseArea(raw: string): number | null {

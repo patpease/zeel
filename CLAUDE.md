@@ -39,6 +39,8 @@ src/model/         Dataset types and the indexed loader.
 src/engine/        estimate(), compare(), spread(). Pure functions, no UI.
 src/units/         IP and SI. Converted at the boundary, nowhere else.
 src/model/presets  The study's own worked programmes — 133, 75, 52. Not invented.
+src/model/groups   The five air systems, their fixed order, and zone membership.
+src/charts/        Hand-authored SVG. No chart library — which is what makes export real.
 src/ui/            Shell, theme, programme editor, formatting. styles.css holds the palette.
 test/              Consistency, schema, published-figure, engine, unit, shell tests.
 source/            The 2019 workbooks. Gitignored — client job number, named engineers.
@@ -112,6 +114,34 @@ floor area is spent on. Tests pin that.
 **Two callbacks, not one.** `onChange` is a single edit and must not bump
 `revision`; `onReplace` is a wholesale swap and must. Collapsing them rewrites
 the field the user is typing in on every keystroke.
+
+## Charts
+
+Two rules that are easy to break and expensive to notice late:
+
+**Never one chart with two axes.** Intensity and total energy are different
+scales, so they are two panels sharing one set of rows. The pairing is the
+point — a café kitchen at 322 kBtu/sf/yr is the third most intense room in the
+building and, on 300 square feet, contributes nothing. Intensity alone misleads,
+which is what the spreadsheet this replaces showed.
+
+**The air-system ramps are validated, not eyeballed.** A single-hue ordinal ramp,
+because the groups are genuinely ordered by the energy they carry and because the
+studio's categorical hues already mean something here — blue is cooling, orange is
+heating, and reusing them would put "special lab" in the chiller's blue two panels
+away. If you change a step, re-run the checker rather than adjusting the test:
+
+```bash
+node validate_palette.js "<hex,...>" --mode light --ordinal
+node validate_palette.js "<hex,...>" --mode dark --surface "#171e26" --ordinal
+```
+
+The dark ramp is *selected* against the dark surface and runs the other way: on a
+dark ground the group carrying the most energy is the brightest.
+
+Values wear text tokens, never the series colour. Numbers appear on hover rather
+than on every bar, and every chart carries a visually-hidden table so the figures
+are reachable without the picture.
 
 ## The stylesheet is the palette, three times over
 

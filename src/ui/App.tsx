@@ -7,6 +7,8 @@ import type { ThemeChoice } from './theme.js';
 import { SunIcon, MoonIcon } from './Icon.js';
 import { BRAND } from '../config/branding.js';
 import { ProgrammeEditor } from './ProgrammeEditor.js';
+import { ZoneBars } from '../charts/ZoneBars.js';
+import { AreaEnergyRings } from '../charts/AreaEnergyRings.js';
 import { estimate } from '../engine/estimate.js';
 import { spread } from '../engine/spread.js';
 import { dataset, getCase, getLocation } from '../model/dataset.js';
@@ -186,8 +188,11 @@ export function App() {
             </div>
           )}
 
+          <AreaEnergyRings result={result} />
+          <ZoneBars zones={result.zones} units={units} />
+
           <div className="placeholder" style={{ marginTop: 16 }}>
-            Zone bars, the area-versus-energy rings and the Sankey arrive in phases 04 and 05.
+            The energy-flow Sankey arrives in phase 05.
           </div>
         </section>
       </main>

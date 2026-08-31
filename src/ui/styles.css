@@ -62,6 +62,21 @@
   --use-dhw: #A5588A;
   --use-dhw-ink: #7E4269;
 
+  /*
+   * Air systems: a single-hue ordinal ramp, ordered by the energy each group
+   * carries. Not five categorical hues — the studio's categorical set already
+   * means something here (blue is cooling, orange is heating), and reusing it
+   * would put "special lab" in the chiller's blue two panels away.
+   *
+   * Validated, not eyeballed: monotone lightness, adjacent gaps >= 0.06 L,
+   * 15 degrees of hue spread, light end 2.17:1 on white.
+   */
+  --group-lab: #0A322D;
+  --group-vivarium: #0E5C55;
+  --group-special-lab: #17766A;
+  --group-general: #1F9B84;
+  --group-auditorium: #3EC29D;
+
   /* A note is advice about the programme; a warning is the data reporting a
      defect. Sharing one colour trains the reader to dismiss both. */
   --note: #2F6FA8;
@@ -113,6 +128,14 @@
     --use-dhw: #C98CB3;
     --use-dhw-ink: #DCB0CC;
 
+    /* Selected against the dark surface, not flipped: on a dark ground the group
+       carrying the most energy is the brightest. Light end 3.32:1 on #171e26. */
+    --group-lab: #8AE9BF;
+    --group-vivarium: #5FD8A8;
+    --group-special-lab: #3EBF93;
+    --group-general: #2A9C7E;
+    --group-auditorium: #1E7C6C;
+
     --note: #6CB0EE;
     --note-ink: #A9D2F5;
     --note-bg: #17232F;
@@ -156,6 +179,14 @@
   --use-heating-ink: #F5C08D;
   --use-dhw: #C98CB3;
   --use-dhw-ink: #DCB0CC;
+
+  /* Selected against the dark surface, not flipped: on a dark ground the group
+     carrying the most energy is the brightest. Light end 3.32:1 on #171e26. */
+  --group-lab: #8AE9BF;
+  --group-vivarium: #5FD8A8;
+  --group-special-lab: #3EBF93;
+  --group-general: #2A9C7E;
+  --group-auditorium: #1E7C6C;
 
   --note: #6CB0EE;
   --note-ink: #A9D2F5;
@@ -710,6 +741,186 @@ h1, h2, h3, p, figure {
   font-size: 0.95rem;
   text-align: right;
   letter-spacing: 0;
+}
+
+/* ---------------------------------------------------------------- charts */
+
+.chart {
+  margin: 20px 0 0;
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: 8px;
+  padding: 16px 18px 14px;
+}
+
+.chart__caption {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+  font-size: 0.86rem;
+  font-weight: 600;
+  color: var(--ink);
+  margin-bottom: 12px;
+}
+
+.chart__sub {
+  font-size: 0.76rem;
+  font-weight: 400;
+  color: var(--ink-muted);
+}
+
+.chart__scroll {
+  overflow-x: auto;
+}
+
+.chart__svg {
+  display: block;
+  width: 100%;
+  height: auto;
+  min-width: 460px;
+}
+
+/* Axes and grid stay recessive: they orient, they do not compete. */
+.chart__grid {
+  stroke: var(--border);
+  stroke-width: 1;
+}
+
+.chart__baseline {
+  stroke: var(--border-strong);
+  stroke-width: 1;
+}
+
+.chart__axis-title {
+  font-family: 'IBM Plex Mono', ui-monospace, monospace;
+  font-size: 8.5px;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  fill: var(--ink-faint);
+}
+
+.chart__row-label {
+  font-size: 10.5px;
+  fill: var(--ink-muted);
+  text-anchor: end;
+}
+
+/* Values wear text tokens, never the series colour. */
+.chart__value {
+  font-family: 'IBM Plex Mono', ui-monospace, monospace;
+  font-size: 10px;
+  fill: var(--ink);
+  font-variant-numeric: tabular-nums;
+}
+
+.chart__hit {
+  fill: transparent;
+}
+
+.chart__row.is-active .chart__hit {
+  fill: var(--accent-wash);
+}
+
+.chart__row.is-active .chart__row-label {
+  fill: var(--ink);
+}
+
+/* ----------------------------------------------------------------- rings */
+
+.rings {
+  display: flex;
+  gap: 20px;
+  align-items: center;
+  flex-wrap: wrap;
+}
+
+.rings__svg {
+  display: block;
+  width: 100%;
+  max-width: 260px;
+  height: auto;
+  flex: none;
+}
+
+.rings__svg path {
+  /* The gap between segments is surface showing through, not a grey line. */
+  stroke: var(--surface);
+  stroke-width: 2;
+}
+
+.rings__lead,
+.rings__foot {
+  text-anchor: middle;
+  font-size: 9px;
+  font-family: 'IBM Plex Mono', ui-monospace, monospace;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  fill: var(--ink-faint);
+}
+
+.rings__figure {
+  text-anchor: middle;
+  font-family: 'IBM Plex Mono', ui-monospace, monospace;
+  font-size: 21px;
+  font-weight: 600;
+  fill: var(--ink);
+  font-variant-numeric: tabular-nums;
+}
+
+.rings__arrow {
+  fill: var(--accent);
+}
+
+.legend {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 5px;
+  font-size: 0.78rem;
+  min-width: 190px;
+  flex: 1;
+}
+
+.legend__item {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.legend__swatch {
+  width: 11px;
+  height: 11px;
+  border-radius: 3px;
+  flex: none;
+}
+
+.legend__label {
+  color: var(--ink-muted);
+  margin-right: auto;
+}
+
+.legend__values {
+  font-family: 'IBM Plex Mono', ui-monospace, monospace;
+  font-variant-numeric: tabular-nums;
+  font-size: 0.74rem;
+  color: var(--ink-muted);
+  white-space: nowrap;
+}
+
+.legend__values strong {
+  color: var(--ink);
+}
+
+.legend__key {
+  font-family: 'IBM Plex Mono', ui-monospace, monospace;
+  font-size: 0.62rem;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--ink-faint);
+  margin-top: 2px;
+  text-align: right;
 }
 
 /* --------------------------------------------------------------- footer */

@@ -134,7 +134,9 @@ describe('grouping', () => {
 
   it('shows each air system’s share of the building’s energy', () => {
     render(<App />);
-    const labRow = screen.getByRole('row', { name: /Lab \/ high energy/i });
+    // Scoped to the editor: the charts' table view also names the air systems.
+    const table = screen.getByRole('table', { name: /Floor area by zone type/i });
+    const labRow = within(table).getByRole('row', { name: /Lab \/ high energy/i });
     // 62% of the energy on the study's own programme.
     expect(within(labRow).getByText('62%')).toBeDefined();
   });

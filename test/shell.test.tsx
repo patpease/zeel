@@ -72,7 +72,8 @@ describe('units', () => {
 
     expect(screen.getByText('420')).toBeDefined();
     expect(screen.getByText('10,684 m²')).toBeDefined();
-    expect(screen.getByText(/kWh\/m²\/yr/)).toBeDefined();
+    // Scoped: the charts label their axes in the same unit.
+    expect(document.querySelector('.headline__unit')?.textContent).toBe('kWh/m²/yr');
   });
 });
 
