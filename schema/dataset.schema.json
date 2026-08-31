@@ -1,0 +1,255 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://zeel.peasestudio.com/schema/dataset.schema.json",
+  "title": "ZEEL dataset",
+  "description": "Zone energy intensities for a laboratory prototype, extracted from the 2019 IES:VE study. Carbon and cost are deliberately absent: they are energy multiplied by a rate, and storing them would freeze one rate vintage into the data.",
+  "type": "object",
+  "required": ["schemaVersion", "generated", "about", "units", "zones", "fanGroups", "endUses", "plantItems", "locations", "studies", "cases", "validation"],
+  "additionalProperties": false,
+  "properties": {
+    "schemaVersion": { "const": 1 },
+    "generated": { "type": "string", "format": "date-time" },
+    "about": {
+      "type": "object",
+      "required": ["name", "summary", "study", "authors"],
+      "properties": {
+        "name": { "type": "string" },
+        "summary": { "type": "string" },
+        "study": { "type": "string" },
+        "authors": { "type": "array", "items": { "type": "string" }, "minItems": 1 }
+      }
+    },
+    "units": { "type": "object", "additionalProperties": { "type": "string" } },
+    "zones": {
+      "type": "array",
+      "minItems": 21,
+      "maxItems": 21,
+      "items": {
+        "type": "object",
+        "required": ["id", "label"],
+        "additionalProperties": false,
+        "properties": {
+          "id": { "$ref": "#/$defs/slug" },
+          "label": { "type": "string" }
+        }
+      }
+    },
+    "fanGroups": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "required": ["id", "label"],
+        "additionalProperties": false,
+        "properties": { "id": { "$ref": "#/$defs/slug" }, "label": { "type": "string" } }
+      }
+    },
+    "endUses": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "required": ["id", "label", "column", "fuel", "service"],
+        "additionalProperties": false,
+        "properties": {
+          "id": { "$ref": "#/$defs/slug" },
+          "label": { "type": "string" },
+          "column": { "type": "string" },
+          "fuel": { "enum": ["electricity", "gas"] },
+          "service": { "enum": ["process", "air", "cooling", "heating", "dhw"] }
+        }
+      }
+    },
+    "plantItems": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "required": ["id", "label", "service", "fuel"],
+        "additionalProperties": false,
+        "properties": {
+          "id": { "type": "string" },
+          "label": { "type": "string" },
+          "service": { "enum": ["air", "cooling", "heating", "dhw"] },
+          "fuel": { "enum": ["electricity", "gas"] }
+        }
+      }
+    },
+    "zoneColumns": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "required": ["key", "header", "unit"],
+        "additionalProperties": true,
+        "properties": {
+          "key": { "type": "string" },
+          "header": { "type": "string" },
+          "aliases": { "type": "array", "items": { "type": "string" } },
+          "unit": { "type": "string" }
+        }
+      }
+    },
+    "locations": {
+      "type": "array",
+      "minItems": 1,
+      "items": {
+        "type": "object",
+        "required": ["id", "label", "state", "climateZone", "rates"],
+        "additionalProperties": false,
+        "properties": {
+          "id": { "$ref": "#/$defs/slug" },
+          "label": { "type": "string" },
+          "state": { "type": "string" },
+          "climateZone": { "type": "string", "pattern": "^[1-8][ABC]?$" },
+          "rates": {
+            "type": "object",
+            "required": ["vintage", "gridCarbonLbPerMwh", "electricityPricePerKwh", "gasPricePer1000Cuft", "electricityCarbonMtPerMbtu", "gasCarbonMtPerMbtu", "electricityCostPerMbtu", "gasCostPerMbtu"],
+            "additionalProperties": false,
+            "properties": {
+              "vintage": {
+                "type": "object",
+                "required": ["year", "source"],
+                "additionalProperties": false,
+                "properties": { "year": { "type": "integer" }, "source": { "type": "string" } }
+              },
+              "gridCarbonLbPerMwh": { "type": "number", "exclusiveMinimum": 0 },
+              "electricityPricePerKwh": { "type": "number", "exclusiveMinimum": 0 },
+              "gasPricePer1000Cuft": { "type": "number", "exclusiveMinimum": 0 },
+              "electricityCarbonMtPerMbtu": { "type": "number", "exclusiveMinimum": 0 },
+              "gasCarbonMtPerMbtu": { "type": "number", "exclusiveMinimum": 0 },
+              "electricityCostPerMbtu": { "type": "number", "exclusiveMinimum": 0 },
+              "gasCostPerMbtu": { "type": "number", "exclusiveMinimum": 0 }
+            }
+          }
+        }
+      }
+    },
+    "studies": {
+      "type": "array",
+      "minItems": 1,
+      "items": {
+        "type": "object",
+        "required": ["id", "label", "description", "caseIds"],
+        "additionalProperties": false,
+        "properties": {
+          "id": { "$ref": "#/$defs/slug" },
+          "label": { "type": "string" },
+          "description": { "type": "string" },
+          "caseIds": { "type": "array", "items": { "$ref": "#/$defs/slug" }, "minItems": 2 }
+        }
+      }
+    },
+    "cases": {
+      "type": "array",
+      "minItems": 1,
+      "items": { "$ref": "#/$defs/case" }
+    },
+    "validation": {
+      "type": "object",
+      "required": ["note", "workbookBaselineEui", "projects"],
+      "additionalProperties": false,
+      "properties": {
+        "note": { "type": "string" },
+        "workbookBaselineEui": { "type": "object", "additionalProperties": { "type": "number" } },
+        "projects": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "required": ["name", "designedEui", "workbookEstimatedEui", "programme", "totalArea"],
+            "additionalProperties": false,
+            "properties": {
+              "name": { "type": "string" },
+              "designedEui": { "type": "number", "exclusiveMinimum": 0 },
+              "workbookEstimatedEui": { "type": "number", "exclusiveMinimum": 0 },
+              "programme": { "type": "object", "additionalProperties": { "type": "number", "exclusiveMinimum": 0 } },
+              "totalArea": { "type": "number", "exclusiveMinimum": 0 }
+            }
+          }
+        }
+      }
+    }
+  },
+  "$defs": {
+    "slug": { "type": "string", "pattern": "^[a-z0-9]+(-[a-z0-9]+)*$" },
+    "case": {
+      "type": "object",
+      "required": ["id", "kind", "label", "locationId", "provenance", "prototype", "plant", "zones", "dataQuality"],
+      "additionalProperties": false,
+      "properties": {
+        "id": { "$ref": "#/$defs/slug" },
+        "kind": { "enum": ["baseline", "climate", "measure", "reverse-measure"] },
+        "label": { "type": "string" },
+        "measureNumber": { "type": "integer", "minimum": 1 },
+        "locationId": { "$ref": "#/$defs/slug" },
+        "description": { "type": "string" },
+        "note": { "type": "string" },
+        "provenance": {
+          "type": "object",
+          "required": ["kind", "tool", "completed", "workbook", "sheet"],
+          "additionalProperties": false,
+          "description": "Every case is a real simulation. Nothing in this dataset is derived, interpolated or transferred between climate zones.",
+          "properties": {
+            "kind": { "const": "simulated" },
+            "tool": { "type": "string" },
+            "completed": { "type": "string", "format": "date" },
+            "workbook": { "type": "string" },
+            "sheet": { "type": "string" },
+            "crossCheckedAgainst": { "type": "string" }
+          }
+        },
+        "prototype": {
+          "type": "object",
+          "required": ["totalArea", "totalElectricity", "totalGas", "blendedEui"],
+          "additionalProperties": false,
+          "properties": {
+            "totalArea": { "type": "number", "exclusiveMinimum": 0 },
+            "totalElectricity": { "type": "number" },
+            "totalGas": { "type": "number" },
+            "blendedEui": { "type": "number", "exclusiveMinimum": 0 }
+          }
+        },
+        "plant": { "type": "object", "additionalProperties": { "type": "number" } },
+        "zones": {
+          "type": "object",
+          "minProperties": 21,
+          "maxProperties": 21,
+          "additionalProperties": { "$ref": "#/$defs/zoneRecord" }
+        },
+        "dataQuality": {
+          "type": "array",
+          "description": "Defects found in the source workbook and carried forward deliberately. An empty array means the case audits clean.",
+          "items": {
+            "type": "object",
+            "required": ["code", "detail", "magnitude"],
+            "additionalProperties": false,
+            "properties": {
+              "code": { "enum": ["share-does-not-sum", "fan-share-does-not-sum", "fan-energy-not-conserved"] },
+              "detail": { "type": "string" },
+              "magnitude": { "type": "number" },
+              "zones": { "type": "array", "items": { "$ref": "#/$defs/slug" } }
+            }
+          }
+        }
+      }
+    },
+    "zoneRecord": {
+      "type": "object",
+      "required": ["fanGroup", "area", "roomElectricity", "fanElectricity", "heatingElectricity", "chwPumpElectricity", "chillerElectricity", "heatingGas", "totalElectricity", "totalGas", "eui"],
+      "additionalProperties": true,
+      "properties": {
+        "fanGroup": { "$ref": "#/$defs/slug" },
+        "area": { "type": "number", "exclusiveMinimum": 0 },
+        "roomElectricity": { "type": "number", "minimum": 0 },
+        "fanElectricity": { "type": "number", "minimum": 0 },
+        "heatingElectricity": { "type": "number", "minimum": 0 },
+        "chwPumpElectricity": { "type": "number", "minimum": 0 },
+        "chillerElectricity": { "type": "number", "minimum": 0 },
+        "heatingGas": { "type": "number", "minimum": 0 },
+        "totalElectricity": { "type": "number", "exclusiveMinimum": 0 },
+        "totalGas": { "type": "number", "minimum": 0 },
+        "eui": { "type": "number", "exclusiveMinimum": 0 },
+        "fanShare": { "type": "number", "minimum": 0, "maximum": 1 },
+        "heatingShare": { "type": "number", "minimum": 0, "maximum": 1 },
+        "coolingShare": { "type": "number", "minimum": 0, "maximum": 1 },
+        "dhwShare": { "type": "number", "minimum": 0, "maximum": 1 }
+      }
+    }
+  }
+}

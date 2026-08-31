@@ -1,0 +1,20 @@
+{
+  "name": "zeel",
+  "private": true,
+  "version": "0.0.1",
+  "type": "module",
+  "description": "Zoned Energy Estimator for Labs — early-planning energy estimation for laboratory program mixes.",
+  "license": "MIT",
+  "scripts": {
+    "extract": "node scripts/extract/index.mjs",
+    "test": "vitest run",
+    "test:watch": "vitest"
+  },
+  "devDependencies": {
+    "ajv": "^8.20.0",
+    "ajv-formats": "^3.0.1",
+    "fast-xml-parser": "^5.0.0",
+    "fflate": "^0.8.3",
+    "vitest": "^4.1.11"
+  }
+}

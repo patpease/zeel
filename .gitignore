@@ -1,0 +1,9 @@
+node_modules/
+dist/
+.DS_Store
+*.log
+
+# The 2019 Arup workbooks are the extraction input, not part of this repo.
+# They carry a client job number and named engineers; the derived dataset in
+# data/ is what ships. See docs/extraction.md for where to put them.
+source/
