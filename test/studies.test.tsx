@@ -14,6 +14,18 @@ describe('two studies, because the dataset has two shapes', () => {
     render(<App />);
     const labels = within(cases()).getAllByRole('button').map((b) => b.textContent);
     expect(labels).toHaveLength(5);
+    // Boston wears its climate zone here, like the other four. A chip reading
+    // "Baseline" beside 6A, 4A, 3A and 5B would hide the one thing this row
+    // exists to compare.
+    expect(labels[0]).toMatch(/^5A/);
+    expect(labels.map((l) => l?.slice(0, 2))).toEqual(['5A', '6A', '4A', '3A', '5B']);
+  });
+
+  it('still calls it the baseline in the measure study, where that is what it is', async () => {
+    const user = userEvent.setup();
+    render(<App />);
+    await user.click(within(modes()).getByRole('button', { name: /measure study/i }));
+    const labels = within(cases()).getAllByRole('button').map((b) => b.textContent);
     expect(labels[0]).toMatch(/^Baseline/);
   });
 

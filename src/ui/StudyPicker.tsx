@@ -34,14 +34,22 @@ export function StudyPicker({
 
   const figures = useMemo(() => {
     const baseline = estimate(programme, 'baseline').eui;
+    // The baseline case appears in both studies and is named by the study it is
+    // sitting in. In the climate comparison it is one climate among five, so it
+    // wears its zone like the rest — a chip reading "Baseline" beside 6A, 4A, 3A
+    // and 5B hides the one thing that row exists to compare. In the measure
+    // study it is the reference the others are measured against, and "Baseline"
+    // is exactly what it is.
+    const byClimate = study.id === 'climate';
     return study.caseIds.map((id) => {
       const simulation = getCase(id);
+      const location = getLocation(simulation.locationId);
       const eui = estimate(programme, id).eui;
       return {
         id,
-        label: simulation.kind === 'climate' ? getLocation(simulation.locationId).climateZone : simulation.label,
+        label: byClimate ? location.climateZone : simulation.label,
         title: simulation.description ?? simulation.label,
-        sub: simulation.kind === 'climate' ? getLocation(simulation.locationId).label : null,
+        sub: byClimate ? location.label : null,
         eui,
         delta: baseline > 0 ? (eui - baseline) / baseline : 0,
         reverse: simulation.kind === 'reverse-measure',
