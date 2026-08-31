@@ -35,9 +35,22 @@ Two rules follow, and both have already been got wrong once:
 scripts/extract/   Excel to JSON pipeline. Label-driven, never coordinate-driven.
 schema/            JSON Schema for the dataset. Enforced in tests, not decorative.
 data/              Generated dataset.json. Committed; never hand-edit it.
-test/              Consistency, schema, and published-figure golden tests.
+src/model/         Dataset types and the indexed loader.
+src/engine/        estimate(), compare(), spread(). Pure functions, no UI.
+src/units/         IP and SI. Converted at the boundary, nowhere else.
+test/              Consistency, schema, published-figure, engine and unit tests.
 source/            The 2019 workbooks. Gitignored — client job number, named engineers.
 ```
+
+## The engine works in one unit set
+
+Square feet, MBtu, kBtu/sf/yr, metric tons, dollars. `src/units/units.ts`
+converts on the way in from a user and on the way out to a screen; nothing in
+between knows which system is displayed. Do not add an SI branch inside the
+engine — that is the version of this that rots.
+
+The SI anchors are genuinely different landmarks, not converted numbers: 133
+kBtu/sf/yr is 420 kWh/m²/yr, and the education copy needs both sets.
 
 ## The dataset is 12 cases, not 40
 

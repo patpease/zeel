@@ -3,18 +3,21 @@
   "private": true,
   "version": "0.0.1",
   "type": "module",
-  "description": "Zoned Energy Estimator for Labs — early-planning energy estimation for laboratory program mixes.",
+  "description": "Zoned Energy Estimator for Labs \u2014 early-planning energy estimation for laboratory program mixes.",
   "license": "MIT",
   "scripts": {
     "extract": "node scripts/extract/index.mjs",
-    "test": "vitest run",
-    "test:watch": "vitest"
+    "test": "tsc --noEmit && vitest run",
+    "test:watch": "vitest",
+    "typecheck": "tsc --noEmit"
   },
   "devDependencies": {
+    "@types/node": "^26.4.0",
     "ajv": "^8.20.0",
     "ajv-formats": "^3.0.1",
     "fast-xml-parser": "^5.0.0",
     "fflate": "^0.8.3",
+    "typescript": "^7.0.2",
     "vitest": "^4.1.11"
   }
 }
