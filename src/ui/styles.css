@@ -981,6 +981,52 @@ h1, h2, h3, p, figure {
   text-align: right;
 }
 
+/* ---------------------------------------------------------------- sankey */
+
+.sankey {
+  display: block;
+  width: 100%;
+  height: auto;
+  min-width: 640px;
+}
+
+.sankey__link {
+  cursor: pointer;
+  transition: opacity 120ms ease;
+}
+
+.sankey__node rect {
+  cursor: pointer;
+}
+
+.sankey__label {
+  font-size: 10.5px;
+  fill: var(--ink-muted);
+  /* Middle-column labels sit over the ribbons, so they are painted with a
+     surface-coloured halo rather than moved somewhere they would not read. */
+  paint-order: stroke fill;
+  stroke: var(--surface);
+  stroke-width: 3px;
+  stroke-linejoin: round;
+}
+
+.sankey__label--group {
+  fill: var(--ink);
+}
+
+.sankey__readout {
+  font-family: 'IBM Plex Mono', ui-monospace, monospace;
+  font-size: 10.5px;
+  fill: var(--ink);
+  font-variant-numeric: tabular-nums;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .sankey__link {
+    transition: none;
+  }
+}
+
 /* --------------------------------------------------------------- footer */
 
 .colophon {

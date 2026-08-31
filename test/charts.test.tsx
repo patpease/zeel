@@ -53,8 +53,10 @@ describe('zone bars', () => {
   });
 
   it('offers the same numbers as a table for anyone who cannot use the picture', () => {
-    const { container } = render(<App />);
-    const table = container.querySelector('table.visually-hidden');
+    render(<App />);
+    // Scoped to this figure: the energy flow carries a hidden table too.
+    const figure = screen.getByRole('figure', { name: /Intensity and total energy by zone/i });
+    const table = figure.querySelector('table.visually-hidden');
     expect(table).not.toBeNull();
     expect(table!.querySelectorAll('tbody tr')).toHaveLength(21);
   });

@@ -40,7 +40,7 @@ src/engine/        estimate(), compare(), spread(). Pure functions, no UI.
 src/units/         IP and SI. Converted at the boundary, nowhere else.
 src/model/presets  The study's own worked programmes — 133, 75, 52. Not invented.
 src/model/groups   The five air systems, their fixed order, and zone membership.
-src/charts/        Hand-authored SVG. No chart library — which is what makes export real.
+src/charts/        Hand-authored SVG, including the Sankey layout. No chart library.
 src/ui/            Shell, theme, programme editor, formatting. styles.css holds the palette.
 test/              Consistency, schema, published-figure, engine, unit, shell tests.
 source/            The 2019 workbooks. Gitignored — client job number, named engineers.
@@ -118,6 +118,17 @@ the field the user is typing in on every keystroke.
 ## Charts
 
 Two rules that are easy to break and expensive to notice late:
+
+**A Sankey node is as tall as what passes THROUGH it** — the larger of what
+arrives and what leaves, never their sum. Adding them makes every middle column
+exactly twice the height of the ends, and the diagram stops meaning anything: a
+Sankey's whole promise is that a band's width is its quantity. `sankey.test.mjs`
+pins it, because the bug renders as a plausible-looking picture.
+
+**The palette does not reach the Sankey's end uses.** Blue means cooling and
+orange means heating; those are physical conventions, not styling, and a Sankey
+with green heating would be a diagram that lies. Air systems are identities, so
+they take the palette; services do not. There is a test.
 
 **Never one chart with two axes.** Intensity and total energy are different
 scales, so they are two panels sharing one set of rows. The pairing is the

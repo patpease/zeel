@@ -11,6 +11,7 @@ import { BRAND } from '../config/branding.js';
 import { ProgrammeEditor } from './ProgrammeEditor.js';
 import { ZoneBars } from '../charts/ZoneBars.js';
 import { AreaEnergyRings } from '../charts/AreaEnergyRings.js';
+import { EnergyFlow } from '../charts/EnergyFlow.js';
 import { estimate } from '../engine/estimate.js';
 import { spread } from '../engine/spread.js';
 import { dataset, getCase, getLocation } from '../model/dataset.js';
@@ -194,11 +195,8 @@ export function App() {
           )}
 
           <AreaEnergyRings result={result} />
+          <EnergyFlow result={result} units={units} />
           <ZoneBars zones={result.zones} units={units} />
-
-          <div className="placeholder" style={{ marginTop: 16 }}>
-            The energy-flow Sankey arrives in phase 05.
-          </div>
         </section>
       </main>
 

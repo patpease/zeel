@@ -3,7 +3,7 @@ import { describe, it, expect } from 'vitest';
 import { render, screen, within } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 import { App } from '../src/ui/App.js';
-import { getPalette } from '../src/charts/palettes.js';
+import { getPalette, DEFAULT_PALETTE_ID } from '../src/charts/palettes.js';
 
 const read = (name: string) => document.documentElement.style.getPropertyValue(name);
 
@@ -12,7 +12,17 @@ describe('choosing a palette', () => {
     render(<App />);
     const select = screen.getByRole('combobox', { name: /chart palette/i });
     const options = within(select).getAllByRole('option').map((o) => o.textContent);
-    expect(options).toEqual(['Pease Studio', 'Okabe–Ito', 'Zissou', 'Aurora', 'Victory', 'Fantastic Fox']);
+    expect(options).toEqual(['Default', 'Okabe–Ito', 'Zissou', 'Aurora', 'Victory', 'Fantastic Fox']);
+  });
+
+  it('loads on the default, with nothing written to the document', () => {
+    render(<App />);
+    const select = screen.getByRole('combobox', { name: /chart palette/i }) as HTMLSelectElement;
+    expect(select.value).toBe(DEFAULT_PALETTE_ID);
+    expect((within(select).getAllByRole('option')[0] as HTMLOptionElement).selected).toBe(true);
+    // Nothing inline: the stylesheet governs, so the media query still works
+    // before any JavaScript has had an opinion.
+    expect(read('--group-lab')).toBe('');
   });
 
   it('writes the chosen ramp onto the document', async () => {
@@ -30,7 +40,7 @@ describe('choosing a palette', () => {
     await user.selectOptions(select, 'aurora');
     expect(read('--group-lab')).not.toBe('');
 
-    await user.selectOptions(select, 'pease-studio');
+    await user.selectOptions(select, 'default');
     // Removed, not overwritten. An inline value would freeze one theme's colours
     // and stop the media query working.
     expect(read('--group-lab')).toBe('');

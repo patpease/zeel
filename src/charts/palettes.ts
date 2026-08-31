@@ -51,12 +51,12 @@ export interface Palette {
   readonly dark: readonly [string, string, string, string, string];
 }
 
-export const DEFAULT_PALETTE_ID = 'pease-studio';
+export const DEFAULT_PALETTE_ID = 'default';
 
 export const PALETTES: readonly Palette[] = [
   {
-    id: 'pease-studio',
-    label: 'Pease Studio',
+    id: 'default',
+    label: 'Default',
     kind: 'ordinal',
     source: 'Pease Studio design system',
     licence: 'In-house',

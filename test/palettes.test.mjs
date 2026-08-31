@@ -63,7 +63,7 @@ describe('licensing', () => {
   it('says plainly which palettes are reproduced and which are re-stepped', () => {
     const verbatim = PALETTES.filter((p) => p.derivation === 'verbatim').map((p) => p.id);
     // Only the palette designed for this job ships unchanged.
-    expect(verbatim).toEqual(['pease-studio', 'okabe-ito']);
+    expect(verbatim).toEqual(['default', 'okabe-ito']);
     for (const palette of PALETTES) {
       expect(palette.note.length, palette.id).toBeGreaterThan(20);
     }
