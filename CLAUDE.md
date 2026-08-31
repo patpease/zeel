@@ -125,6 +125,24 @@ point — a café kitchen at 322 kBtu/sf/yr is the third most intense room in th
 building and, on 300 square feet, contributes nothing. Intensity alone misleads,
 which is what the spreadsheet this replaces showed.
 
+**Palettes are user-selectable, and every one is validated.** `src/charts/palettes.ts`
+holds six: the studio default plus five alternatives. Two facts about them are
+load-bearing:
+
+- **Nothing is copied from paletteer.** paletteer is GPL-3; taking its data would
+  carry that licence into an MIT project. It was used as a *catalogue* to find
+  packages, and every value comes from the original source — colorblindr,
+  wesanderson and nord, each independently MIT. See `THIRD-PARTY-NOTICES.md`.
+- **Artistic palettes are not data palettes.** Run the source palettes through the
+  checks and they fail badly: nord's `frost` puts adjacent colours 2.9 ΔE apart
+  and wesanderson's `Royal2` 7.2, where 15 is the floor for a reader with full
+  colour vision. Only `Okabe–Ito` ships verbatim; the rest keep their source's
+  hue family and are re-stepped into ordinal ramps.
+
+Choosing the default *removes* the inline custom properties rather than
+overwriting them, so the stylesheet's media query keeps working. Any other
+palette writes the five properties keyed on the resolved theme.
+
 **The air-system ramps are validated, not eyeballed.** A single-hue ordinal ramp,
 because the groups are genuinely ordered by the energy they carry and because the
 studio's categorical hues already mean something here — blue is cooling, orange is

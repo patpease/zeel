@@ -21,7 +21,8 @@ describe('the shell', () => {
 
   it('wears the suite’s chrome — organisation, product, tagline', () => {
     render(<App />);
-    expect(screen.getByText('Pease Studio')).toBeDefined();
+    // Scoped: "Pease Studio" is also a palette name and appears in the credit.
+    expect(document.querySelector('.brand-org')?.textContent).toBe('Pease Studio');
     expect(screen.getByRole('heading', { level: 1 }).textContent).toMatch(/ZEEL/);
     expect(screen.getByText('Zoned Energy Estimator for Labs')).toBeDefined();
   });

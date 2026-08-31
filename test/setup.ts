@@ -25,5 +25,6 @@ afterEach(() => {
   if (!hasDom) return;
   cleanup();
   document.documentElement.removeAttribute('data-theme');
+  document.documentElement.removeAttribute('style');
   window.localStorage.clear();
 });

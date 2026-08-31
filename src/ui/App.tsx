@@ -5,6 +5,8 @@ import markSvg from './mark.svg?raw';
 import { useTheme } from './theme.js';
 import type { ThemeChoice } from './theme.js';
 import { SunIcon, MoonIcon } from './Icon.js';
+import { PaletteSelect } from './PaletteSelect.js';
+import { usePalette } from './usePalette.js';
 import { BRAND } from '../config/branding.js';
 import { ProgrammeEditor } from './ProgrammeEditor.js';
 import { ZoneBars } from '../charts/ZoneBars.js';
@@ -22,6 +24,7 @@ import {
 
 export function App() {
   const theme = useTheme();
+  const { palette, setPaletteId } = usePalette(theme.resolved);
   const [units, setUnits] = useState<UnitSystem>('ip');
   const [caseId] = useState('baseline');
 
@@ -67,6 +70,8 @@ export function App() {
         </div>
 
         <div className="header-toggles">
+          <PaletteSelect palette={palette} theme={theme.resolved} onChange={setPaletteId} />
+
           <div className="unit-toggle" role="group" aria-label="Unit system">
             {(['ip', 'si'] as UnitSystem[]).map((system) => (
               <button
@@ -204,6 +209,11 @@ export function App() {
         </span>
         <span>{dataset.about.study}</span>
         <span>Nothing is uploaded and nothing is kept.</span>
+        <span>
+          Palette: {palette.label} — {palette.source}
+          {palette.licence !== 'In-house' && `, ${palette.licence}`}
+          {palette.derivation === 're-stepped' && ', re-stepped for legibility'}
+        </span>
       </footer>
     </div>
   );

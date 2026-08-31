@@ -384,6 +384,64 @@ h1, h2, h3, p, figure {
   padding: 0 0.45rem;
 }
 
+/* Same derived height as the toggles, so the three controls sit on one line. */
+.palette-select {
+  display: flex;
+  align-items: center;
+  gap: 0;
+  border: 1px solid var(--border);
+  border-radius: 6px;
+  overflow: hidden;
+  height: calc(17px + 0.6rem + 2px);
+  background: var(--surface);
+}
+
+.palette-select__swatches {
+  display: flex;
+  height: 100%;
+  padding: 0 0 0 5px;
+  align-items: center;
+  gap: 2px;
+}
+
+.palette-select__chip {
+  width: 7px;
+  height: 15px;
+  border-radius: 2px;
+  display: block;
+}
+
+.palette-select__control {
+  appearance: none;
+  border: 0;
+  background: transparent;
+  color: var(--ink-muted);
+  font: inherit;
+  font-size: 0.82rem;
+  font-weight: 600;
+  padding: 0 1.4rem 0 0.5rem;
+  height: 100%;
+  cursor: pointer;
+  /* The chevron is drawn rather than fetched, so no asset and no third-party
+     origin; currentColor keeps it in step with the theme. */
+  background-image: linear-gradient(45deg, transparent 50%, currentColor 50%),
+    linear-gradient(135deg, currentColor 50%, transparent 50%);
+  background-position: right 0.62rem center, right 0.37rem center;
+  background-size: 5px 5px, 5px 5px;
+  background-repeat: no-repeat;
+}
+
+.palette-select__control:hover {
+  color: var(--ink);
+}
+
+/* The native menu is painted by the operating system, so its options need
+   explicit colours or they inherit a light list into a dark page. */
+.palette-select__control option {
+  background: var(--surface);
+  color: var(--ink);
+}
+
 .theme-toggle .icon {
   display: block;
   /* The icons inherit their outline from `currentColor`, so the active state
