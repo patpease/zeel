@@ -6,6 +6,7 @@ import { PRESETS } from '../model/presets.js';
 import { area as areaUnit } from '../units/units.js';
 import type { UnitSystem } from '../units/units.js';
 import { formatEui } from './format.js';
+import { cardFor } from '../education/zones.js';
 
 /** Grouping and intensities come from the baseline: the editor is about the
  *  programme, not about which case is selected. */
@@ -47,6 +48,8 @@ export function ProgrammeEditor({
   programme, units, revision, onChange, onReplace, totalEnergyByZone, totalEnergy,
 }: Props) {
   const [draft, setDraft] = useState(() => toDraft(programme, units));
+  // One card open at a time. Twenty-one expanded rows is a document, not a table.
+  const [openZone, setOpenZone] = useState<ZoneId | null>(null);
 
   useEffect(() => {
     setDraft(toDraft(programme, units));
@@ -166,9 +169,22 @@ export function ProgrammeEditor({
 
               {group.zones.map((zone) => {
                 const record = BASELINE.zones[zone.id];
-                return (
+                const card = cardFor(zone.id);
+                const open = openZone === zone.id;
+                return [
                   <tr key={zone.id}>
-                    <th scope="row" className="zone-row__name">{zone.label}</th>
+                    <th scope="row" className="zone-row__name">
+                      {card ? (
+                        <button
+                          type="button"
+                          className="zone-row__disclose"
+                          aria-expanded={open}
+                          onClick={() => setOpenZone(open ? null : zone.id)}
+                        >
+                          {zone.label}
+                        </button>
+                      ) : zone.label}
+                    </th>
                     <td className="numeric-col zone-row__eui">
                       {record ? formatEui(record.eui, units) : ''}
                     </td>
@@ -185,8 +201,53 @@ export function ProgrammeEditor({
                         onPaste={handlePaste(zone.id)}
                       />
                     </td>
-                  </tr>
-                );
+                  </tr>,
+                  open && card ? (
+                    <tr key={`${zone.id}-card`} className="zone-card-row">
+                      <td colSpan={3}>
+                        <div className="zone-card">
+                          <p className="zone-card__summary">{card.summary}</p>
+                          <dl className="zone-card__facts">
+                            {card.assumptions.plugLoad !== undefined && (
+                              <div><dt>Plug load</dt><dd>{card.assumptions.plugLoad} W/sf</dd></div>
+                            )}
+                            {card.assumptions.lightingPower !== undefined && (
+                              <div><dt>Lighting</dt><dd>{card.assumptions.lightingPower} W/sf</dd></div>
+                            )}
+                            {card.assumptions.airChanges && (
+                              <div>
+                                <dt>Air changes</dt>
+                                <dd>{card.assumptions.airChanges[0]} / {card.assumptions.airChanges[1]} ACH</dd>
+                              </div>
+                            )}
+                            {card.assumptions.setpoints && (
+                              <div>
+                                <dt>Setpoints</dt>
+                                <dd>{card.assumptions.setpoints[1]}–{card.assumptions.setpoints[2]} °F</dd>
+                              </div>
+                            )}
+                            {card.assumptions.occupantDensity !== undefined && (
+                              <div>
+                                <dt>Occupancy</dt>
+                                <dd>
+                                  {card.assumptions.occupantDensity === 0
+                                    ? 'Unoccupied'
+                                    : `${card.assumptions.occupantDensity} sf/person`}
+                                </dd>
+                              </div>
+                            )}
+                            {card.assumptions.schedule && (
+                              <div><dt>Schedule</dt><dd>{card.assumptions.schedule}</dd></div>
+                            )}
+                          </dl>
+                          {card.assumptions.note && (
+                            <p className="zone-card__note">{card.assumptions.note}</p>
+                          )}
+                        </div>
+                      </td>
+                    </tr>
+                  ) : null,
+                ];
               })}
             </tbody>
           );

@@ -14,6 +14,8 @@ import { AreaEnergyRings } from '../charts/AreaEnergyRings.js';
 import { EnergyFlow } from '../charts/EnergyFlow.js';
 import { ComparisonStrip } from '../charts/ComparisonStrip.js';
 import { StudyPicker } from './StudyPicker.js';
+import { BenchmarkScale } from '../charts/BenchmarkScale.js';
+import { Guidance } from './Guidance.js';
 import { estimate, compare } from '../engine/estimate.js';
 import { spread } from '../engine/spread.js';
 import { dataset, getCase, getLocation } from '../model/dataset.js';
@@ -187,6 +189,7 @@ export function App() {
               precision, and a stated envelope would invite the prediction reading
               the whole tool is built to avoid.
             */}
+            <BenchmarkScale eui={result.eui} units={units} />
             <p className="headline__spread">{observed.statement}</p>
           </div>
 
@@ -230,6 +233,7 @@ export function App() {
           <AreaEnergyRings result={result} />
           <EnergyFlow result={result} units={units} />
           <ZoneBars zones={result.zones} units={units} />
+          <Guidance result={result} units={units} />
         </section>
       </main>
 

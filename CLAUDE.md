@@ -115,6 +115,35 @@ floor area is spent on. Tests pin that.
 `revision`; `onReplace` is a wholesale swap and must. Collapsing them rewrites
 the field the user is typing in on every keystroke.
 
+## The guidance layer
+
+`src/education/` holds three things, all drafted from the 2019 presentation —
+the workbook carries results, not inputs, so the deck is the only record of what
+was assumed.
+
+- **`zones.ts`** — per-zone summary plus the deck's own figures. **Only what the
+  deck states is recorded.** Core lab, MRI, NMR and corridor appear in its
+  occupancy table and in none of the lighting, plug load or air system tables, so
+  those fields are absent for them rather than filled with a plausible guess.
+  There is a test.
+- **`checks.ts`** — opinions about the brief as entered. These are **notes, not
+  warnings**: a warning means the data is reporting a defect, a note means the
+  tool has a view. They never share a colour. Every check states a fact and
+  stops; none recommends anything.
+- **`benchmarks.ts`** — the reference points, so a number has somewhere to stand.
+
+**A check must fire on the case it describes.** The "what had to go" note was
+first keyed on the heaviest space types being absent — and the study's own 50 EUI
+programme keeps a token core lab, so it never fired on the very programme it was
+written about. It is keyed on their share of floor area now.
+
+**The validation table does not use the diverging pair.** Everywhere else, down
+means less energy and is good. Here, coming in low is the *concerning*
+direction, and painting −29.6% green would contradict the sentence underneath.
+The sign carries direction; the prose carries judgement.
+
+The walkthrough is deliberately not built. It waits for v1.
+
 ## Two studies, because the dataset has two shapes
 
 Five climate zones at baseline, eight cases at 5A Boston, nothing in the

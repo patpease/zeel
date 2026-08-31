@@ -49,7 +49,8 @@ describe('the shell', () => {
 
   it('describes the spread as a range and never as a tolerance', () => {
     render(<App />);
-    const statement = screen.getByText(/real laboratory buildings/i);
+    // Scoped: the evidence panel quotes the same statement.
+    const statement = document.querySelector('.headline__spread')!;
     expect(statement.textContent).toMatch(/between/);
     expect(statement.textContent).not.toMatch(/±/);
     expect(statement.textContent).not.toMatch(/plus or minus/i);

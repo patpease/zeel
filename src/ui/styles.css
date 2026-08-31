@@ -1147,6 +1147,252 @@ h1, h2, h3, p, figure {
   }
 }
 
+/* ------------------------------------------------------------- guidance */
+
+.benchmark {
+  margin: 14px 0 0;
+}
+
+.benchmark__svg {
+  display: block;
+  width: 100%;
+  height: auto;
+}
+
+.benchmark__track {
+  fill: var(--surface-sunk);
+}
+
+.benchmark__zone {
+  fill: var(--ok-bg);
+  stroke: var(--ok-ink);
+  stroke-width: 1;
+}
+
+.benchmark__rule {
+  stroke: var(--border-strong);
+  stroke-width: 1;
+}
+
+.benchmark__tick {
+  font-family: 'IBM Plex Mono', ui-monospace, monospace;
+  font-size: 9px;
+  letter-spacing: 0.06em;
+  fill: var(--ink-faint);
+}
+
+.benchmark__here {
+  fill: var(--accent);
+  stroke: var(--surface);
+  stroke-width: 2.5;
+}
+
+.benchmark__value {
+  font-family: 'IBM Plex Mono', ui-monospace, monospace;
+  font-size: 10.5px;
+  font-weight: 600;
+  fill: var(--ink);
+  font-variant-numeric: tabular-nums;
+}
+
+.guidance {
+  margin-top: 20px;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+/* A note is an opinion about the brief; a warning is the data reporting a
+   defect. They never share a colour — sharing one teaches a reader to dismiss
+   both. */
+.notes {
+  background: var(--note-bg);
+  border-left: 3px solid var(--note);
+  border-radius: 0 6px 6px 0;
+  padding: 14px 18px;
+}
+
+.notes__title {
+  font-family: 'IBM Plex Mono', ui-monospace, monospace;
+  font-size: 0.62rem;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: var(--note-ink);
+  font-weight: 600;
+  margin-bottom: 8px;
+}
+
+.notes__list {
+  margin: 0;
+  padding-left: 18px;
+  font-size: 0.84rem;
+  color: var(--ink);
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+.notes__list li::marker {
+  color: var(--note);
+}
+
+.notes__foot {
+  margin-top: 10px;
+  font-size: 0.78rem;
+  color: var(--ink-muted);
+  max-width: 68ch;
+}
+
+.disclosure {
+  border: 1px solid var(--border);
+  border-radius: 6px;
+  background: var(--surface);
+}
+
+.disclosure__summary {
+  cursor: pointer;
+  padding: 10px 16px;
+  font-size: 0.82rem;
+  font-weight: 600;
+  color: var(--ink);
+  list-style: none;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.disclosure__summary::-webkit-details-marker {
+  display: none;
+}
+
+.disclosure__summary::before {
+  content: '';
+  width: 0;
+  height: 0;
+  border-left: 5px solid currentColor;
+  border-top: 4px solid transparent;
+  border-bottom: 4px solid transparent;
+  color: var(--ink-faint);
+  transition: transform 120ms ease;
+}
+
+.disclosure[open] .disclosure__summary::before {
+  transform: rotate(90deg);
+}
+
+.disclosure__body {
+  padding: 0 16px 14px;
+  font-size: 0.84rem;
+  color: var(--ink-muted);
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  max-width: 76ch;
+}
+
+.validation {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 0.8rem;
+}
+
+.validation th,
+.validation td {
+  padding: 5px 8px;
+  border-bottom: 1px solid var(--border);
+  text-align: left;
+}
+
+.validation thead th {
+  font-family: 'IBM Plex Mono', ui-monospace, monospace;
+  font-size: 0.6rem;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: var(--ink-faint);
+}
+
+.validation td.numeric-col,
+.validation th.numeric-col {
+  text-align: right;
+  font-family: 'IBM Plex Mono', ui-monospace, monospace;
+  font-variant-numeric: tabular-nums;
+}
+
+.validation tbody th {
+  font-weight: 400;
+  color: var(--ink);
+}
+
+/* ------------------------------------------------------------ zone cards */
+
+.zone-row__disclose {
+  border: 0;
+  background: none;
+  padding: 0;
+  font: inherit;
+  color: var(--ink);
+  cursor: pointer;
+  text-align: left;
+  border-bottom: 1px dotted var(--border-strong);
+}
+
+.zone-row__disclose:hover,
+.zone-row__disclose[aria-expanded='true'] {
+  color: var(--accent);
+  border-bottom-color: var(--accent);
+}
+
+.zone-card-row td {
+  padding: 0 6px 8px;
+}
+
+.zone-card {
+  background: var(--surface-sunk);
+  border-radius: 6px;
+  padding: 11px 13px;
+  font-size: 0.8rem;
+}
+
+.zone-card__summary {
+  color: var(--ink);
+  margin-bottom: 9px;
+  max-width: 58ch;
+}
+
+.zone-card__facts {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(112px, 1fr));
+  gap: 7px 12px;
+  margin: 0;
+}
+
+.zone-card__facts div {
+  display: flex;
+  flex-direction: column;
+}
+
+.zone-card__facts dt {
+  font-family: 'IBM Plex Mono', ui-monospace, monospace;
+  font-size: 0.58rem;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: var(--ink-faint);
+}
+
+.zone-card__facts dd {
+  margin: 0;
+  font-family: 'IBM Plex Mono', ui-monospace, monospace;
+  font-size: 0.76rem;
+  color: var(--ink);
+}
+
+.zone-card__note {
+  margin-top: 9px;
+  font-size: 0.76rem;
+  color: var(--ink-muted);
+  font-style: italic;
+}
+
 /* --------------------------------------------------------------- footer */
 
 .colophon {
