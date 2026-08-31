@@ -38,7 +38,8 @@ data/              Generated dataset.json. Committed; never hand-edit it.
 src/model/         Dataset types and the indexed loader.
 src/engine/        estimate(), compare(), spread(). Pure functions, no UI.
 src/units/         IP and SI. Converted at the boundary, nowhere else.
-src/ui/            Shell, theme, formatting. styles.css holds the whole palette.
+src/model/presets  The study's own worked programmes — 133, 75, 52. Not invented.
+src/ui/            Shell, theme, programme editor, formatting. styles.css holds the palette.
 test/              Consistency, schema, published-figure, engine, unit, shell tests.
 source/            The 2019 workbooks. Gitignored — client job number, named engineers.
 ```
@@ -94,6 +95,23 @@ the control would look broken on a first visit. There is a test for it.
 
 `src/config/branding.ts` is the single source of truth for the name and tagline,
 mirroring that tool's `config/branding.ts`.
+
+## The programme editor teaches before it collects
+
+Zones are grouped by air system and the groups are ordered by the energy they
+carry — labs 62%, vivarium 19%, general 11%, special labs 6%, auditorium 2%.
+That order is **fixed, not recomputed from what the user typed**: rows that
+reshuffle mid-entry are unusable, and the point is to show the shape of the
+problem before anyone starts. Every row also carries its intensity, so the cost
+of a choice is visible while it is being made rather than only afterwards.
+
+The presets are the 2019 study's own programmes and each reproduces the EUI it
+reported — 133, 75, 52 — all at 115,000 sf, so they differ only in what the
+floor area is spent on. Tests pin that.
+
+**Two callbacks, not one.** `onChange` is a single edit and must not bump
+`revision`; `onReplace` is a wholesale swap and must. Collapsing them rewrites
+the field the user is typing in on every keystroke.
 
 ## The stylesheet is the palette, three times over
 

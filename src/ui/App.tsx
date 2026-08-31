@@ -1,4 +1,4 @@
-import { useMemo, useState } from 'react';
+import { useCallback, useMemo, useState } from 'react';
 // The mark is inlined rather than linked so the tile's custom properties resolve
 // against the live theme. It is our own build-time asset, not user input.
 import markSvg from './mark.svg?raw';
@@ -6,9 +6,12 @@ import { useTheme } from './theme.js';
 import type { ThemeChoice } from './theme.js';
 import { SunIcon, MoonIcon } from './Icon.js';
 import { BRAND } from '../config/branding.js';
+import { ProgrammeEditor } from './ProgrammeEditor.js';
 import { estimate } from '../engine/estimate.js';
 import { spread } from '../engine/spread.js';
-import { DEFAULT_PROGRAMME, dataset, getCase, getLocation } from '../model/dataset.js';
+import { dataset, getCase, getLocation } from '../model/dataset.js';
+import { getPreset, DEFAULT_PRESET_ID } from '../model/presets.js';
+import type { Programme } from '../model/types.js';
 import { eui as euiUnit } from '../units/units.js';
 import type { UnitSystem } from '../units/units.js';
 import {
@@ -20,7 +23,21 @@ export function App() {
   const [units, setUnits] = useState<UnitSystem>('ip');
   const [caseId] = useState('baseline');
 
-  const result = useMemo(() => estimate(DEFAULT_PROGRAMME, caseId), [caseId]);
+  const [programme, setProgramme] = useState<Programme>(() => getPreset(DEFAULT_PRESET_ID).areas);
+  // Bumped only when the programme is replaced wholesale — a preset or a paste —
+  // so the editor's fields resync then, and not on every keystroke.
+  const [revision, setRevision] = useState(0);
+
+  const replaceProgramme = useCallback((next: Programme) => {
+    setProgramme(next);
+    setRevision((n) => n + 1);
+  }, []);
+
+  const result = useMemo(() => estimate(programme, caseId), [programme, caseId]);
+  const energyByZone = useMemo(
+    () => Object.fromEntries(result.zones.map((z) => [z.zoneId, z.energy])),
+    [result],
+  );
   const observed = useMemo(() => spread(), []);
   const simulation = getCase(caseId);
   const location = getLocation(result.locationId);
@@ -109,11 +126,15 @@ export function App() {
               {formatArea(result.totalArea, units)}
             </span>
           </div>
-          <div className="placeholder">
-            The 21-zone area table lands here in phase 03, grouped by air system rather than
-            listed alphabetically — the grouping is the finding. Showing the study’s own
-            115,000 sf worked example until then.
-          </div>
+          <ProgrammeEditor
+            programme={programme}
+            units={units}
+            revision={revision}
+            onChange={setProgramme}
+            onReplace={replaceProgramme}
+            totalEnergyByZone={energyByZone}
+            totalEnergy={result.energy}
+          />
         </section>
 
         <section className="panel" aria-labelledby="results-title">
