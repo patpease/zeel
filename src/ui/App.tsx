@@ -148,7 +148,7 @@ export function App() {
         <section className="panel" aria-labelledby="programme-title">
           <div className="panel__head">
             <h2 className="panel__title" id="programme-title">Programme</h2>
-            <span className="mono" style={{ fontSize: '0.78rem', color: 'var(--ink-muted)' }}>
+            <span className="panel__meta">
               {formatArea(result.totalArea, units)}
             </span>
           </div>
@@ -166,7 +166,7 @@ export function App() {
         <section className="panel" aria-labelledby="results-title">
           <div className="panel__head">
             <h2 className="panel__title" id="results-title">Estimate</h2>
-            <span className="mono" style={{ fontSize: '0.78rem', color: 'var(--ink-muted)' }}>
+            <span className="panel__meta">
               {simulation.label} · {location.label}
             </span>
           </div>
@@ -263,6 +263,11 @@ export function App() {
         </span>
         <span>{dataset.about.study}</span>
         <span>Nothing is uploaded and nothing is kept.</span>
+        <span>
+          <a href={BRAND.feedbackUrl} target="_blank" rel="noreferrer noopener">
+            Tell me what is wrong with it
+          </a>
+        </span>
         <span>
           Palette: {palette.label} — {palette.source}
           {palette.licence !== 'In-house' && `, ${palette.licence}`}

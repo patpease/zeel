@@ -3,7 +3,7 @@
   "private": true,
   "version": "0.0.1",
   "type": "module",
-  "description": "Zoned Energy Estimator for Labs — early-planning energy estimation for laboratory program mixes.",
+  "description": "Zoned Energy Estimator for Labs \u2014 early-planning energy estimation for laboratory program mixes.",
   "license": "MIT",
   "scripts": {
     "extract": "node scripts/extract/index.mjs",
@@ -12,7 +12,9 @@
     "typecheck": "tsc --noEmit",
     "dev": "vite",
     "build": "tsc --noEmit && vite build",
-    "preview": "vite preview"
+    "preview": "vite preview",
+    "preview:worker": "npm run build && wrangler dev",
+    "deploy": "npm run build && wrangler deploy"
   },
   "devDependencies": {
     "@testing-library/react": "^16.3.3",
@@ -28,7 +30,8 @@
     "jsdom": "^30.0.1",
     "typescript": "^7.0.2",
     "vite": "^8.2.2",
-    "vitest": "^4.1.11"
+    "vitest": "^4.1.11",
+    "wrangler": "^4.127.1"
   },
   "dependencies": {
     "@fontsource-variable/archivo": "^5.3.0",

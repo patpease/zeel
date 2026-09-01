@@ -2,6 +2,7 @@ import { useMemo } from 'react';
 import type { Estimate } from '../engine/estimate.js';
 import { getCase, getLocation } from '../model/dataset.js';
 import { paletteVariables } from '../charts/palettes.js';
+import { BRAND } from '../config/branding.js';
 import type { Palette } from '../charts/palettes.js';
 
 /**
@@ -43,7 +44,7 @@ export function useExportContext(result: Estimate, palette: Palette): ExportCont
       scope: EXPORT_SCOPE,
       provenance:
         `${simulation.label} · ${location.label} (${location.climateZone}) · ${area} sf · ` +
-        `${simulation.provenance.tool} ${simulation.provenance.completed} · zeel.peasestudio.com`,
+        `${simulation.provenance.tool} ${simulation.provenance.completed} · ${BRAND.host}`,
       slug: `zeel-${result.caseId}`,
       variables: paletteVariables(palette, 'light'),
     };

@@ -12,6 +12,8 @@ energy targets, compliance paths, or quantified measure savings.
 
 Everything runs in the browser: no account, no upload, nothing kept.
 
+**Beta, live at <https://zeel.patpease0.workers.dev>.**
+
 ## Where the numbers come from
 
 One IES:VE model of a 115,000 sf STEM building, simulated in 2019, with custom
@@ -42,9 +44,14 @@ source/            The 2019 workbooks. Not committed; see docs/extraction.md
 
 ```bash
 npm install
-npm run extract
-npm test
+npm run extract          # needs the 2019 workbooks in source/
+npm test                 # type checks, then runs the suite
+npm run dev              # 5184
+npm run preview:worker   # the real Workers runtime, with headers and 404s
 ```
+
+See `docs/deploying.md` before changing anything about hosting or the content
+security policy.
 
 ## Licence
 

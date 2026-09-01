@@ -420,8 +420,8 @@ h1, h2, h3, p, figure {
 .palette-select__chip {
   width: 7px;
   height: 15px;
-  border-radius: 2px;
   display: block;
+  flex: none;
 }
 
 .palette-select__control {
@@ -523,6 +523,18 @@ h1, h2, h3, p, figure {
   text-transform: uppercase;
   color: var(--ink-faint);
   font-weight: 600;
+}
+
+/*
+ * These exist because the values they carry used to be inline `style` props, and
+ * `style-src 'self'` blocks every one of them. Anything that varies per element
+ * — a legend swatch, a palette chip — is an SVG `fill` attribute instead, which
+ * is not a style at all. That is what keeps the policy free of 'unsafe-inline'.
+ */
+.panel__meta {
+  font-family: 'IBM Plex Mono', ui-monospace, monospace;
+  font-size: 0.78rem;
+  color: var(--ink-muted);
 }
 
 .headline {
@@ -991,6 +1003,12 @@ h1, h2, h3, p, figure {
   width: 100%;
   height: auto;
   min-width: 460px;
+  /* The drawn width is a constant of the layout, not of the data. */
+  max-width: 494px;
+}
+
+.chart__svg--strip {
+  max-width: 460px;
 }
 
 /* Axes and grid stay recessive: they orient, they do not compete. */
@@ -1111,8 +1129,8 @@ h1, h2, h3, p, figure {
 .legend__swatch {
   width: 11px;
   height: 11px;
-  border-radius: 3px;
   flex: none;
+  display: block;
 }
 
 .legend__label {

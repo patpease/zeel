@@ -174,7 +174,9 @@ export function AreaEnergyRings({ result, exportContext }: Props) {
                 onMouseEnter={() => setHovered(group.id)}
                 onMouseLeave={() => setHovered(null)}
               >
-                <span className="legend__swatch" style={{ background: groupColorVar(group.id) }} />
+                <svg className="legend__swatch" viewBox="0 0 12 12" aria-hidden="true">
+                  <rect width="12" height="12" rx="3" fill={groupColorVar(group.id)} />
+                </svg>
                 <span className="legend__label">{group.label}</span>
                 <span className="legend__values">
                   {formatPercent(a?.share ?? 0)} / <strong>{formatPercent(e?.share ?? 0)}</strong>

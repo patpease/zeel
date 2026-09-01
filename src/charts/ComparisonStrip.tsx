@@ -79,10 +79,9 @@ export function ComparisonStrip({
         <svg
           ref={svgRef}
           viewBox={`0 0 ${width} ${height}`}
-          className="chart__svg"
+          className="chart__svg chart__svg--strip"
           role="img"
           aria-labelledby={titleId}
-          style={{ maxWidth: width }}
         >
           <text x={0} y={11} className="sankey__readout">{readout}</text>
           <text x={zeroX - 8} y={25} className="chart__axis-title" textAnchor="end">

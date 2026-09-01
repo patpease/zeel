@@ -1,0 +1,27 @@
+{
+  // Cloudflare Workers, with the built site as static assets. Workers, not
+  // Pages: they are different products, and Psychrometric Studio lost a deploy
+  // to the difference — a Pages-style `functions/` directory is silently ignored
+  // here, and under the wrong `not_found_handling` an unknown path answers 200
+  // with the application shell instead of a 404.
+  //
+  // `not_found_handling` is "none" deliberately. ZEEL has no client-side router,
+  // so nothing legitimately resolves to a path that is not a file, and the
+  // single-page-application setting would turn every typo into a 200.
+  "$schema": "node_modules/wrangler/config-schema.json",
+  "name": "zeel",
+  "compatibility_date": "2026-08-01",
+  "main": "worker/index.ts",
+  "assets": {
+    "directory": "./dist",
+    "binding": "ASSETS",
+    "not_found_handling": "none",
+    // Without this an asset that exists is served straight from the store and
+    // the script never runs — so the security headers it sets would be missing
+    // from every page that actually loads, and present only on the 404.
+    "run_worker_first": true
+  },
+  "observability": {
+    "enabled": true
+  }
+}

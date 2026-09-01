@@ -20,7 +20,9 @@ export function PaletteSelect({ palette, theme, onChange }: Props) {
     <div className="palette-select">
       <span className="palette-select__swatches" aria-hidden="true">
         {palette[theme].map((colour, i) => (
-          <span key={i} className="palette-select__chip" style={{ background: colour }} />
+          <svg key={i} className="palette-select__chip" viewBox="0 0 8 16" aria-hidden="true">
+            <rect width="8" height="16" rx="2" fill={colour} />
+          </svg>
         ))}
       </span>
       <select

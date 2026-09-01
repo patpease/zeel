@@ -2,7 +2,9 @@
 
 Early-planning energy estimation for laboratory programme mixes. Rebuild of a
 2019 Arup Excel tool. Everything runs in the browser; no account, no upload,
-nothing kept. Will deploy to `zeel.peasestudio.com`.
+nothing kept. Live at `zeel.patpease0.workers.dev` — peasestudio.com is
+registered but not yet serving, and `BRAND.host` is stamped on every export, so
+the two move together.
 
 **Read this file first.** `README.md` orients; `docs/extraction.md` is the
 authority on where the numbers come from and what is wrong with them.
@@ -301,5 +303,13 @@ A green suite is not evidence the browser works. Once there is a UI, open it.
 
 Cloudflare **Worker** first, **Pages** later. That only stays a cheap migration
 if the app is a pure static bundle throughout: no Worker-only routes, no KV, no
-SSR. The Worker entry point serves `dist` and returns a real 404 for anything
-that is not a file.
+SSR. The Worker serves `dist`, adds the headers a meta tag cannot, and returns a
+real 404 for anything that is not a file. See `docs/deploying.md` — including the
+two settings (`not_found_handling`, `run_worker_first`) that fail quietly.
+
+**`style-src` has no `'unsafe-inline'`, and keeping it that way constrains the
+code.** A value that varies per element cannot be a `style` prop: colours that
+change are SVG `fill` attributes instead, and the export builds a `<style>` block
+rather than writing `style` attributes. `npm run dev` reports violations that
+production does not — those are Vite's injected `<style>` tags. Check the policy
+against `npm run preview:worker`.

@@ -77,7 +77,7 @@ async function embeddedFonts(): Promise<string> {
 }
 
 /**
- * Freeze the clone's appearance into inline styles.
+ * Freeze the clone's appearance into a stylesheet for the exported document.
  *
  * Read from the **clone**, never from the live element. The clone sits inside a
  * `[data-theme="light"]` container, so its `var(--…)` references resolve to the
@@ -86,12 +86,19 @@ async function embeddedFonts(): Promise<string> {
  * colours on a white page, which is pale text and a dark halo, and looks like a
  * rendering fault rather than a sampling one.
  *
+ * The values are returned as CSS rules rather than written to `style`
+ * attributes. `style-src 'self'` blocks a style attribute, and while the
+ * serialiser still reads the attribute it set — so the export happened to work —
+ * every element raised a violation, and a stricter browser would be within its
+ * rights to drop the attribute entirely. A `<style>` block inside the exported
+ * SVG is a different document and answers to nothing here.
+ *
  * Classes are stripped only after the values are read, since the classes are
  * what the values come from.
  */
-function inlineStyles(clone: SVGSVGElement): void {
+function freezeStyles(clone: SVGSVGElement): string {
   const elements = [clone, ...clone.querySelectorAll<SVGElement>('*')];
-  const frozen = elements.map((element) => {
+  const declarations = elements.map((element) => {
     const computed = window.getComputedStyle(element);
     let css = '';
     for (const property of CARRIED) {
@@ -100,10 +107,18 @@ function inlineStyles(clone: SVGSVGElement): void {
     }
     return css;
   });
+
+  const rules: string[] = [];
   elements.forEach((element, i) => {
-    element.setAttribute('style', frozen[i] ?? '');
     element.removeAttribute('class');
+    const css = declarations[i];
+    if (!css) return;
+    // An ordinary data attribute, and a selector that outranks the presentation
+    // attributes the markup carries.
+    element.setAttribute('data-e', String(i));
+    rules.push(`[data-e="${i}"]{${css}}`);
   });
+  return rules.join('');
 }
 
 export interface ExportOptions {
@@ -135,8 +150,12 @@ export async function exportChartPng(
   // getComputedStyle to resolve anything.
   const stage = document.createElement('div');
   stage.setAttribute('data-theme', 'light');
-  stage.style.cssText =
-    'position:fixed;left:-10000px;top:0;width:900px;pointer-events:none;opacity:0;';
+  // Set property by property through the CSSOM rather than as a style attribute:
+  // the attribute is what `style-src 'self'` refuses.
+  for (const [name, value] of [
+    ['position', 'fixed'], ['left', '-10000px'], ['top', '0'],
+    ['width', '900px'], ['pointer-events', 'none'], ['opacity', '0'],
+  ]) stage.style.setProperty(name!, value!);
   // Inline, so they out-rank the stylesheet's own [data-theme="light"] block.
   for (const [name, value] of options.variables) stage.style.setProperty(name, value);
 
@@ -151,7 +170,7 @@ export async function exportChartPng(
 
   let pngBlob: Blob | null = null;
   try {
-    inlineStyles(clone);
+    const frozen = freezeStyles(clone);
     // Rendered light, so the surrounding chrome is light too.
     const light = window.getComputedStyle(stage);
     const ink = light.getPropertyValue('--ink').trim() || '#14202b';
@@ -171,6 +190,7 @@ export async function exportChartPng(
 
     const document_ = `<svg xmlns="http://www.w3.org/2000/svg" width="${totalW}" height="${totalH}" viewBox="0 0 ${totalW} ${totalH}">
 <style>${fonts}
+${frozen}
 text { font-family: 'Archivo Variable', sans-serif; }
 .x-title { font-size: 17px; font-weight: 600; fill: ${ink}; }
 .x-scope { font-family: 'IBM Plex Mono', monospace; font-size: 9.5px; fill: ${faint}; letter-spacing: 0.04em; }

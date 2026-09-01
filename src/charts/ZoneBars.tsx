@@ -82,7 +82,6 @@ export function ZoneBars({ zones, units, exportContext }: Props) {
           className="chart__svg"
           role="img"
           aria-labelledby={titleId}
-          style={{ maxWidth: width }}
         >
           <g className="chart__axis">
             <text x={xEui} y={11} className="chart__axis-title">

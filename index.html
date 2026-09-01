@@ -8,6 +8,13 @@
       name="description"
       content="Early-planning energy estimation for laboratory programme mixes. Enter the areas of 21 zone types and see the energy, carbon and cost that programme implies."
     />
+    <!--
+      The policy lives here rather than only in the Worker so it applies in
+      `npm run dev` as well. A policy that exists only in production is a
+      policy discovered in production. frame-ancestors is set by the Worker,
+      because a meta CSP ignores it and only logs an error.
+    -->
+    <meta http-equiv="Content-Security-Policy" content="default-src 'none'; script-src 'self'; style-src 'self'; font-src 'self' data:; img-src 'self' data: blob:; connect-src 'self'; base-uri 'none'; form-action 'none'; object-src 'none'" />
     <link rel="icon" href="/mark.svg" type="image/svg+xml" />
   </head>
   <body>

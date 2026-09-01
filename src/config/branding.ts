@@ -20,4 +20,16 @@ export const BRAND = {
   tagline: 'Zoned Energy Estimator for Labs',
   /** Provisional until the real tile is drawn; see src/ui/mark.svg. */
   markIsPlaceholder: true,
+  /**
+   * Where the beta actually lives. peasestudio.com is registered but not yet
+   * serving, so the tool is on a workers.dev subdomain until it is — and the
+   * host is stamped on every export, so it has to be the one that resolves.
+   */
+  host: 'zeel.patpease0.workers.dev',
+  /**
+   * The beta exists to find out whether anyone wants this, so it needs somewhere
+   * to say so. Issues rather than an address: no public contact email has been
+   * settled, and a mailto nobody reads is worse than no link.
+   */
+  feedbackUrl: 'https://github.com/patpease/zeel/issues',
 } as const;
