@@ -1,10 +1,11 @@
-import { useId, useState } from 'react';
+import { useId, useRef, useState } from 'react';
 import type { ZoneEstimate } from '../engine/estimate.js';
 import type { UnitSystem } from '../units/units.js';
 import { energy as energyUnit, eui as euiUnit } from '../units/units.js';
 import { groupColorVar } from './groups.js';
 import { labelForGroup } from '../model/groups.js';
 import { formatEnergy, formatEui } from '../ui/format.js';
+import { ExportButton } from '../ui/ExportButton.js';
 
 /**
  * Intensity and total energy, side by side.
@@ -33,10 +34,14 @@ function barPath(x: number, y: number, w: number, h: number, r = 4): string {
 interface Props {
   readonly zones: readonly ZoneEstimate[];
   readonly units: UnitSystem;
+  readonly exportScope: string;
+  readonly exportProvenance: string;
+  readonly exportSlug: string;
 }
 
-export function ZoneBars({ zones, units }: Props) {
+export function ZoneBars({ zones, units, exportScope, exportProvenance, exportSlug }: Props) {
   const titleId = useId();
+  const svgRef = useRef<SVGSVGElement>(null);
   const [hovered, setHovered] = useState<string | null>(null);
 
   if (zones.length === 0) return null;
@@ -56,15 +61,25 @@ export function ZoneBars({ zones, units }: Props) {
 
   return (
     <figure className="chart" aria-labelledby={titleId}>
-      <figcaption className="chart__caption" id={titleId}>
-        Intensity and total energy by zone
-        <span className="chart__sub">
-          A room can be intense and irrelevant. The two panels have separate scales.
-        </span>
-      </figcaption>
+      <div className="chart__head">
+        <figcaption className="chart__caption" id={titleId}>
+          Intensity and total energy by zone
+          <span className="chart__sub">
+            A room can be intense and irrelevant. The two panels have separate scales.
+          </span>
+        </figcaption>
+        <ExportButton
+          target={() => svgRef.current}
+          title="Intensity and total energy by zone"
+          scope={exportScope}
+          provenance={exportProvenance}
+          fileName={`${exportSlug}-zones.png`}
+        />
+      </div>
 
       <div className="chart__scroll">
         <svg
+          ref={svgRef}
           viewBox={`0 0 ${width} ${height}`}
           className="chart__svg"
           role="img"

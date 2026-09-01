@@ -115,6 +115,33 @@ floor area is spent on. Tests pin that.
 `revision`; `onReplace` is a wholesale swap and must. Collapsing them rewrites
 the field the user is typing in on every keystroke.
 
+## Export
+
+`src/io/exportPng.ts`. PNG only for the beta, one camera per chart, no report —
+the chart is the unit people want, and a document can wait until there is
+evidence anyone wants one.
+
+An SVG loaded into an `<img>` renders in an **isolated context**: no page
+stylesheet, no custom properties, no fonts. Three things follow, and each was a
+bug before it was a feature:
+
+- **Read computed styles from the CLONE, never the live element.** The clone sits
+  in a `[data-theme="light"]` container so `var(--…)` resolves light; the live
+  element resolves to whatever the viewer is looking at. Getting this wrong is
+  silent — the export just comes out in dark-theme colours on a white page, which
+  looks like a rendering fault rather than a sampling one.
+- **Pin the clone's width and height.** A nested `<svg>` with neither takes the
+  *outer* viewport as its size rather than its own viewBox, so it rescales,
+  re-centres, and spills past the footer.
+- **Embed the fonts as data URIs.** A `@font-face` pointing at a URL is a blocked
+  external fetch inside the isolated render, and the type silently falls back.
+
+The scope line and the case are drawn into the artwork, not offered beside it.
+
+None of this is unit-testable — jsdom has no canvas and no image decoder, so a
+test could only assert that the mocks were called. Verify export changes in a
+real browser.
+
 ## The guidance layer
 
 `src/education/` holds three things, all drafted from the 2019 presentation —

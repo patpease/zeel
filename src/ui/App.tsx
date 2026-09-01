@@ -16,6 +16,7 @@ import { ComparisonStrip } from '../charts/ComparisonStrip.js';
 import { StudyPicker } from './StudyPicker.js';
 import { BenchmarkScale } from '../charts/BenchmarkScale.js';
 import { Guidance } from './Guidance.js';
+import { useExportContext } from './useExportContext.js';
 import { estimate, compare } from '../engine/estimate.js';
 import { spread } from '../engine/spread.js';
 import { dataset, getCase, getLocation } from '../model/dataset.js';
@@ -56,6 +57,7 @@ export function App() {
     () => Object.fromEntries(result.zones.map((z) => [z.zoneId, z.energy])),
     [result],
   );
+  const exportContext = useExportContext(result);
   const comparison = useMemo(
     () => (caseId === 'baseline' ? null : compare(programme, 'baseline', caseId)),
     [programme, caseId],
@@ -229,10 +231,35 @@ export function App() {
             </div>
           )}
 
-          {comparison && <ComparisonStrip comparison={comparison} units={units} />}
-          <AreaEnergyRings result={result} />
-          <EnergyFlow result={result} units={units} />
-          <ZoneBars zones={result.zones} units={units} />
+          {comparison && (
+            <ComparisonStrip
+              comparison={comparison}
+              units={units}
+              exportScope={exportContext.scope}
+              exportProvenance={exportContext.provenance}
+              exportSlug={exportContext.slug}
+            />
+          )}
+          <AreaEnergyRings
+            result={result}
+            exportScope={exportContext.scope}
+            exportProvenance={exportContext.provenance}
+            exportSlug={exportContext.slug}
+          />
+          <EnergyFlow
+            result={result}
+            units={units}
+            exportScope={exportContext.scope}
+            exportProvenance={exportContext.provenance}
+            exportSlug={exportContext.slug}
+          />
+          <ZoneBars
+            zones={result.zones}
+            units={units}
+            exportScope={exportContext.scope}
+            exportProvenance={exportContext.provenance}
+            exportSlug={exportContext.slug}
+          />
           <Guidance result={result} units={units} />
         </section>
       </main>

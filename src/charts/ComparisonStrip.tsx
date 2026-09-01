@@ -1,8 +1,9 @@
-import { useId, useState } from 'react';
+import { useId, useRef, useState } from 'react';
 import type { Comparison } from '../engine/estimate.js';
 import { formatEui, formatPercent } from '../ui/format.js';
 import type { UnitSystem } from '../units/units.js';
 import { eui as euiUnit } from '../units/units.js';
+import { ExportButton } from '../ui/ExportButton.js';
 
 /**
  * Per-zone change against the baseline, diverging from a zero rule.
@@ -31,10 +32,16 @@ const INSIDE_MIN = 46;
 interface Props {
   readonly comparison: Comparison;
   readonly units: UnitSystem;
+  readonly exportScope: string;
+  readonly exportProvenance: string;
+  readonly exportSlug: string;
 }
 
-export function ComparisonStrip({ comparison, units }: Props) {
+export function ComparisonStrip({
+  comparison, units, exportScope, exportProvenance, exportSlug,
+}: Props) {
   const titleId = useId();
+  const svgRef = useRef<SVGSVGElement>(null);
   const [hovered, setHovered] = useState<string | null>(null);
 
   const rows = comparison.zones.filter((z) => Math.abs(z.deltaFraction) > 0.0005);
@@ -54,15 +61,25 @@ export function ComparisonStrip({ comparison, units }: Props) {
 
   return (
     <figure className="chart" aria-labelledby={titleId}>
-      <figcaption className="chart__caption" id={titleId}>
-        Which zones respond
-        <span className="chart__sub">
-          Change against the baseline, zone by zone. Direction and rough size — not a saving.
-        </span>
-      </figcaption>
+      <div className="chart__head">
+        <figcaption className="chart__caption" id={titleId}>
+          Which zones respond
+          <span className="chart__sub">
+            Change against the baseline, zone by zone. Direction and rough size — not a saving.
+          </span>
+        </figcaption>
+        <ExportButton
+          target={() => svgRef.current}
+          title="Which zones respond"
+          scope={exportScope}
+          provenance={exportProvenance}
+          fileName={`${exportSlug}-comparison.png`}
+        />
+      </div>
 
       <div className="chart__scroll">
         <svg
+          ref={svgRef}
           viewBox={`0 0 ${width} ${height}`}
           className="chart__svg"
           role="img"

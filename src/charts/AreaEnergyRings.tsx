@@ -1,8 +1,9 @@
-import { useId, useMemo, useState } from 'react';
+import { useId, useMemo, useRef, useState } from 'react';
 import type { Estimate } from '../engine/estimate.js';
 import { GROUPS } from '../model/groups.js';
 import { groupColorVar } from './groups.js';
 import { formatPercent } from '../ui/format.js';
+import { ExportButton } from '../ui/ExportButton.js';
 
 /**
  * Area outside, energy inside, split the same way.
@@ -71,10 +72,14 @@ function ringOf(values: Map<string, number>): Ring[] {
 
 interface Props {
   readonly result: Estimate;
+  readonly exportScope: string;
+  readonly exportProvenance: string;
+  readonly exportSlug: string;
 }
 
-export function AreaEnergyRings({ result }: Props) {
+export function AreaEnergyRings({ result, exportScope, exportProvenance, exportSlug }: Props) {
   const titleId = useId();
+  const svgRef = useRef<SVGSVGElement>(null);
   const [hovered, setHovered] = useState<string | null>(null);
 
   const { areaRing, energyRing, labShare } = useMemo(() => {
@@ -105,15 +110,25 @@ export function AreaEnergyRings({ result }: Props) {
 
   return (
     <figure className="chart" aria-labelledby={titleId}>
-      <figcaption className="chart__caption" id={titleId}>
-        Where the floor goes, and where the energy goes
-        <span className="chart__sub">
-          Outer ring is floor area; inner ring is energy. Same split, same colours.
-        </span>
-      </figcaption>
+      <div className="chart__head">
+        <figcaption className="chart__caption" id={titleId}>
+          Where the floor goes, and where the energy goes
+          <span className="chart__sub">
+            Outer ring is floor area; inner ring is energy. Same split, same colours.
+          </span>
+        </figcaption>
+        <ExportButton
+          target={() => svgRef.current}
+          title="Where the floor goes, and where the energy goes"
+          scope={exportScope}
+          provenance={exportProvenance}
+          fileName={`${exportSlug}-area-energy.png`}
+        />
+      </div>
 
       <div className="rings">
         <svg
+          ref={svgRef}
           viewBox={`0 0 ${SIZE} ${SIZE}`}
           className="rings__svg"
           role="img"

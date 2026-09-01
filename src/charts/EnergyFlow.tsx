@@ -1,4 +1,4 @@
-import { useId, useMemo, useState } from 'react';
+import { useId, useMemo, useRef, useState } from 'react';
 import type { Estimate } from '../engine/estimate.js';
 import { dataset } from '../model/dataset.js';
 import { GROUPS } from '../model/groups.js';
@@ -7,6 +7,7 @@ import { layoutSankey, ribbon } from './sankey.js';
 import type { SankeyLinkInput, SankeyNodeInput } from './sankey.js';
 import type { UnitSystem } from '../units/units.js';
 import { formatEnergy, formatPercent } from '../ui/format.js';
+import { ExportButton } from '../ui/ExportButton.js';
 
 /**
  * Fuel to end use to air system.
@@ -40,10 +41,14 @@ const SERVICE_COLOUR: Record<string, string> = {
 interface Props {
   readonly result: Estimate;
   readonly units: UnitSystem;
+  readonly exportScope: string;
+  readonly exportProvenance: string;
+  readonly exportSlug: string;
 }
 
-export function EnergyFlow({ result, units }: Props) {
+export function EnergyFlow({ result, units, exportScope, exportProvenance, exportSlug }: Props) {
   const titleId = useId();
+  const svgRef = useRef<SVGSVGElement>(null);
   const [hover, setHover] = useState<string | null>(null);
 
   const layout = useMemo(() => {
@@ -121,15 +126,25 @@ export function EnergyFlow({ result, units }: Props) {
 
   return (
     <figure className="chart" aria-labelledby={titleId}>
-      <figcaption className="chart__caption" id={titleId}>
-        How the energy flows
-        <span className="chart__sub">
-          Fuel, to what it is spent on, to the rooms that spent it. Hover to trace one band.
-        </span>
-      </figcaption>
+      <div className="chart__head">
+        <figcaption className="chart__caption" id={titleId}>
+          How the energy flows
+          <span className="chart__sub">
+            Fuel, to what it is spent on, to the rooms that spent it. Hover to trace one band.
+          </span>
+        </figcaption>
+        <ExportButton
+          target={() => svgRef.current}
+          title="How the energy flows"
+          scope={exportScope}
+          provenance={exportProvenance}
+          fileName={`${exportSlug}-energy-flow.png`}
+        />
+      </div>
 
       <div className="chart__scroll">
         <svg
+          ref={svgRef}
           viewBox={`0 0 ${WIDTH} ${HEIGHT + TOP + 18}`}
           className="sankey"
           role="img"
