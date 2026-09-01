@@ -6,6 +6,7 @@ import { groupColorVar } from './groups.js';
 import { labelForGroup } from '../model/groups.js';
 import { formatEnergy, formatEui } from '../ui/format.js';
 import { ExportButton } from '../ui/ExportButton.js';
+import type { ExportContext } from '../ui/useExportContext.js';
 
 /**
  * Intensity and total energy, side by side.
@@ -34,12 +35,10 @@ function barPath(x: number, y: number, w: number, h: number, r = 4): string {
 interface Props {
   readonly zones: readonly ZoneEstimate[];
   readonly units: UnitSystem;
-  readonly exportScope: string;
-  readonly exportProvenance: string;
-  readonly exportSlug: string;
+  readonly exportContext: ExportContext;
 }
 
-export function ZoneBars({ zones, units, exportScope, exportProvenance, exportSlug }: Props) {
+export function ZoneBars({ zones, units, exportContext }: Props) {
   const titleId = useId();
   const svgRef = useRef<SVGSVGElement>(null);
   const [hovered, setHovered] = useState<string | null>(null);
@@ -71,9 +70,8 @@ export function ZoneBars({ zones, units, exportScope, exportProvenance, exportSl
         <ExportButton
           target={() => svgRef.current}
           title="Intensity and total energy by zone"
-          scope={exportScope}
-          provenance={exportProvenance}
-          fileName={`${exportSlug}-zones.png`}
+          context={exportContext}
+          name="zones"
         />
       </div>
 

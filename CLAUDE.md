@@ -130,6 +130,12 @@ bug before it was a feature:
   element resolves to whatever the viewer is looking at. Getting this wrong is
   silent — the export just comes out in dark-theme colours on a white page, which
   looks like a rendering fault rather than a sampling one.
+- **Stamp the chosen palette's LIGHT steps on the stage, inline.** The palette
+  lives as custom properties on the document element, but the stage carries
+  `data-theme="light"` — which the stylesheet also targets, re-declaring
+  `--group-*` and out-ranking the inherited values. Without the inline stamp
+  every export silently reverts to the default ramp. Light steps specifically:
+  the document element holds the dark ones whenever the viewer is in dark mode.
 - **Pin the clone's width and height.** A nested `<svg>` with neither takes the
   *outer* viewport as its size rather than its own viewBox, so it rescales,
   re-centres, and spills past the footer.

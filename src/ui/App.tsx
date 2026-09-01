@@ -57,7 +57,7 @@ export function App() {
     () => Object.fromEntries(result.zones.map((z) => [z.zoneId, z.energy])),
     [result],
   );
-  const exportContext = useExportContext(result);
+  const exportContext = useExportContext(result, palette);
   const comparison = useMemo(
     () => (caseId === 'baseline' ? null : compare(programme, 'baseline', caseId)),
     [programme, caseId],
@@ -235,30 +235,22 @@ export function App() {
             <ComparisonStrip
               comparison={comparison}
               units={units}
-              exportScope={exportContext.scope}
-              exportProvenance={exportContext.provenance}
-              exportSlug={exportContext.slug}
+            exportContext={exportContext}
             />
           )}
           <AreaEnergyRings
             result={result}
-            exportScope={exportContext.scope}
-            exportProvenance={exportContext.provenance}
-            exportSlug={exportContext.slug}
+            exportContext={exportContext}
           />
           <EnergyFlow
             result={result}
             units={units}
-            exportScope={exportContext.scope}
-            exportProvenance={exportContext.provenance}
-            exportSlug={exportContext.slug}
+            exportContext={exportContext}
           />
           <ZoneBars
             zones={result.zones}
             units={units}
-            exportScope={exportContext.scope}
-            exportProvenance={exportContext.provenance}
-            exportSlug={exportContext.slug}
+            exportContext={exportContext}
           />
           <Guidance result={result} units={units} />
         </section>

@@ -4,6 +4,7 @@ import { GROUPS } from '../model/groups.js';
 import { groupColorVar } from './groups.js';
 import { formatPercent } from '../ui/format.js';
 import { ExportButton } from '../ui/ExportButton.js';
+import type { ExportContext } from '../ui/useExportContext.js';
 
 /**
  * Area outside, energy inside, split the same way.
@@ -72,12 +73,10 @@ function ringOf(values: Map<string, number>): Ring[] {
 
 interface Props {
   readonly result: Estimate;
-  readonly exportScope: string;
-  readonly exportProvenance: string;
-  readonly exportSlug: string;
+  readonly exportContext: ExportContext;
 }
 
-export function AreaEnergyRings({ result, exportScope, exportProvenance, exportSlug }: Props) {
+export function AreaEnergyRings({ result, exportContext }: Props) {
   const titleId = useId();
   const svgRef = useRef<SVGSVGElement>(null);
   const [hovered, setHovered] = useState<string | null>(null);
@@ -120,9 +119,8 @@ export function AreaEnergyRings({ result, exportScope, exportProvenance, exportS
         <ExportButton
           target={() => svgRef.current}
           title="Where the floor goes, and where the energy goes"
-          scope={exportScope}
-          provenance={exportProvenance}
-          fileName={`${exportSlug}-area-energy.png`}
+          context={exportContext}
+          name="area-energy"
         />
       </div>
 

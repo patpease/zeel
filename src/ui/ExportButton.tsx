@@ -1,5 +1,6 @@
 import { useRef, useState } from 'react';
 import { exportChartPng } from '../io/exportPng.js';
+import type { ExportContext } from './useExportContext.js';
 
 /**
  * A camera on the chart it exports, rather than a report button somewhere else.
@@ -12,12 +13,12 @@ interface Props {
   /** Resolves the chart's own <svg>, which is only in the DOM once mounted. */
   readonly target: () => SVGSVGElement | null;
   readonly title: string;
-  readonly scope: string;
-  readonly provenance: string;
-  readonly fileName: string;
+  readonly context: ExportContext;
+  /** Appended to the context's slug, e.g. "energy-flow". */
+  readonly name: string;
 }
 
-export function ExportButton({ target, title, scope, provenance, fileName }: Props) {
+export function ExportButton({ target, title, context, name }: Props) {
   const [state, setState] = useState<'idle' | 'working' | 'failed'>('idle');
   const timer = useRef<number | null>(null);
 
@@ -26,7 +27,13 @@ export function ExportButton({ target, title, scope, provenance, fileName }: Pro
     if (!svg) return;
     setState('working');
     try {
-      await exportChartPng(svg, { title, scope, provenance, fileName });
+      await exportChartPng(svg, {
+        title,
+        scope: context.scope,
+        provenance: context.provenance,
+        variables: context.variables,
+        fileName: `${context.slug}-${name}.png`,
+      });
       setState('idle');
     } catch {
       setState('failed');

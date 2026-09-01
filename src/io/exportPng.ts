@@ -113,6 +113,13 @@ export interface ExportOptions {
   /** Which case and location the chart was drawn from. */
   readonly provenance: string;
   readonly fileName: string;
+  /**
+   * Custom properties to stamp on the export stage — the chosen palette's light
+   * steps. Required, because the stage's own `data-theme="light"` makes the
+   * stylesheet re-declare `--group-*`, which would otherwise silently drag every
+   * export back to the default ramp.
+   */
+  readonly variables: readonly (readonly [string, string])[];
 }
 
 export async function exportChartPng(
@@ -130,6 +137,9 @@ export async function exportChartPng(
   stage.setAttribute('data-theme', 'light');
   stage.style.cssText =
     'position:fixed;left:-10000px;top:0;width:900px;pointer-events:none;opacity:0;';
+  // Inline, so they out-rank the stylesheet's own [data-theme="light"] block.
+  for (const [name, value] of options.variables) stage.style.setProperty(name, value);
+
   const clone = svg.cloneNode(true) as SVGSVGElement;
   // A nested <svg> with no width or height takes the *outer* viewport as its
   // size, not its own viewBox — so it scales and re-centres itself and spills

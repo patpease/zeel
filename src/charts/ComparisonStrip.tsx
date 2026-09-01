@@ -4,6 +4,7 @@ import { formatEui, formatPercent } from '../ui/format.js';
 import type { UnitSystem } from '../units/units.js';
 import { eui as euiUnit } from '../units/units.js';
 import { ExportButton } from '../ui/ExportButton.js';
+import type { ExportContext } from '../ui/useExportContext.js';
 
 /**
  * Per-zone change against the baseline, diverging from a zero rule.
@@ -32,13 +33,11 @@ const INSIDE_MIN = 46;
 interface Props {
   readonly comparison: Comparison;
   readonly units: UnitSystem;
-  readonly exportScope: string;
-  readonly exportProvenance: string;
-  readonly exportSlug: string;
+  readonly exportContext: ExportContext;
 }
 
 export function ComparisonStrip({
-  comparison, units, exportScope, exportProvenance, exportSlug,
+  comparison, units, exportContext,
 }: Props) {
   const titleId = useId();
   const svgRef = useRef<SVGSVGElement>(null);
@@ -71,9 +70,8 @@ export function ComparisonStrip({
         <ExportButton
           target={() => svgRef.current}
           title="Which zones respond"
-          scope={exportScope}
-          provenance={exportProvenance}
-          fileName={`${exportSlug}-comparison.png`}
+          context={exportContext}
+          name="comparison"
         />
       </div>
 

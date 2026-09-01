@@ -8,6 +8,7 @@ import type { SankeyLinkInput, SankeyNodeInput } from './sankey.js';
 import type { UnitSystem } from '../units/units.js';
 import { formatEnergy, formatPercent } from '../ui/format.js';
 import { ExportButton } from '../ui/ExportButton.js';
+import type { ExportContext } from '../ui/useExportContext.js';
 
 /**
  * Fuel to end use to air system.
@@ -41,12 +42,10 @@ const SERVICE_COLOUR: Record<string, string> = {
 interface Props {
   readonly result: Estimate;
   readonly units: UnitSystem;
-  readonly exportScope: string;
-  readonly exportProvenance: string;
-  readonly exportSlug: string;
+  readonly exportContext: ExportContext;
 }
 
-export function EnergyFlow({ result, units, exportScope, exportProvenance, exportSlug }: Props) {
+export function EnergyFlow({ result, units, exportContext }: Props) {
   const titleId = useId();
   const svgRef = useRef<SVGSVGElement>(null);
   const [hover, setHover] = useState<string | null>(null);
@@ -136,9 +135,8 @@ export function EnergyFlow({ result, units, exportScope, exportProvenance, expor
         <ExportButton
           target={() => svgRef.current}
           title="How the energy flows"
-          scope={exportScope}
-          provenance={exportProvenance}
-          fileName={`${exportSlug}-energy-flow.png`}
+          context={exportContext}
+          name="energy-flow"
         />
       </div>
 

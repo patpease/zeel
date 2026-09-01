@@ -72,6 +72,36 @@ describe('what every export carries', () => {
     expect(options.scope).toMatch(/does not predict a saving/i);
   });
 
+  it('carries the chosen palette’s LIGHT steps, not the default ramp', async () => {
+    const user = userEvent.setup();
+    render(<App />);
+    await user.selectOptions(
+      screen.getByRole('combobox', { name: /chart palette/i }), 'fantastic-fox',
+    );
+    await user.click(screen.getByRole('button', { name: /How the energy flows as PNG/i }));
+
+    // The export stage carries data-theme="light", which the stylesheet also
+    // targets — so without these the palette silently reverts to the default
+    // ramp. Light steps specifically: the document element holds the dark ones
+    // whenever the viewer is in dark mode.
+    const { options } = lastCall();
+    expect(Object.fromEntries(options.variables.map((v) => [...v]))).toEqual({
+      '--group-lab': '#4A2A06',
+      '--group-vivarium': '#6E4009',
+      '--group-special-lab': '#96590C',
+      '--group-general': '#BE7412',
+      '--group-auditorium': '#DE9530',
+    });
+  });
+
+  it('falls back to the default ramp when that is what is chosen', async () => {
+    const user = userEvent.setup();
+    render(<App />);
+    await user.click(screen.getByRole('button', { name: /How the energy flows as PNG/i }));
+    const { options } = lastCall();
+    expect(options.variables[0]).toEqual(['--group-lab', '#0A322D']);
+  });
+
   it('names the case, the place and the programme it was drawn from', async () => {
     const user = userEvent.setup();
     render(<App />);
