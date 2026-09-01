@@ -301,6 +301,33 @@ h1, h2, h3, p, figure {
   height: 100%;
 }
 
+/*
+ * One mark per theme, chosen the same three ways the palette is: light on the
+ * bare selector, dark inside the media query guarded against an explicit light
+ * choice, and dark again on the stamped attribute. Defined in all three or a
+ * pinned theme shows the wrong tile.
+ */
+.brand-icon--reversed {
+  display: none;
+}
+
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme='light']) .brand-icon--standard {
+    display: none;
+  }
+  :root:not([data-theme='light']) .brand-icon--reversed {
+    display: block;
+  }
+}
+
+[data-theme='dark'] .brand-icon--standard {
+  display: none;
+}
+
+[data-theme='dark'] .brand-icon--reversed {
+  display: block;
+}
+
 .brand-text {
   display: flex;
   flex-direction: column;

@@ -2,6 +2,7 @@ import { useCallback, useMemo, useState } from 'react';
 // The mark is inlined rather than linked so the tile's custom properties resolve
 // against the live theme. It is our own build-time asset, not user input.
 import markSvg from './mark.svg?raw';
+import markReversedSvg from './mark-reversed.svg?raw';
 import { useTheme } from './theme.js';
 import type { ThemeChoice } from './theme.js';
 import { SunIcon, MoonIcon } from './Icon.js';
@@ -70,13 +71,23 @@ export function App() {
     <div className="app">
       <header className="app-header">
         <div className="brand">
-          {/* Inlined rather than linked so the tile's custom properties resolve
-              against the live theme — one asset instead of a light and a dark
-              PNG. It is our own build-time file, not user input. */}
+          {/*
+            Both marks are inlined and CSS picks one. Not a <picture> with a
+            media query: that answers `prefers-color-scheme` only, and the theme
+            here has an explicit override on top of it — a pinned light theme on
+            a dark system would otherwise show the reversed mark.
+
+            They are our own build-time files, not user input.
+          */}
           <span
-            className="brand-icon"
+            className="brand-icon brand-icon--standard"
             aria-hidden="true"
             dangerouslySetInnerHTML={{ __html: markSvg }}
+          />
+          <span
+            className="brand-icon brand-icon--reversed"
+            aria-hidden="true"
+            dangerouslySetInnerHTML={{ __html: markReversedSvg }}
           />
           <div className="brand-text">
             <span className="brand-org">{BRAND.organisation}</span>

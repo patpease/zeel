@@ -1,9 +1,40 @@
 <svg xmlns="http://www.w3.org/2000/svg" width="70" height="70" viewBox="0 0 70 70" fill="none">
-  <rect width="70" height="70" rx="15" fill="#0B2B28"></rect>
-  <rect x="13" y="35" width="9" height="17" rx="1.5" fill="#3ECF8E"></rect>
-  <rect x="24" y="41" width="7" height="11" rx="1.5" fill="#2F9BD6"></rect>
-  <rect x="33" y="23" width="12" height="29" rx="1.5" fill="#E2842F"></rect>
-  <rect x="47" y="31" width="10" height="21" rx="1.5" fill="#3ECF8E"></rect>
-  <path d="M11 27H59" stroke="#F4F7F6" stroke-width="2.5" stroke-linecap="round" stroke-dasharray="5 4.5" opacity=".55"></path>
-  <rect x="13" y="53" width="44" height="3.5" rx="1.75" fill="#F4F7F6" opacity=".5"></rect>
+  <!--
+    The tab icon, carrying both marks so it inverts like the header does.
+
+    A favicon is one file fetched by the browser, so it cannot be swapped by the
+    application's stylesheet — the media query has to live inside the SVG. The
+    standard mark is the default, which is also the graceful fallback: a browser
+    that ignores prefers-color-scheme for favicons still shows a filled tile.
+
+    Keep this in step with src/ui/mark.svg and src/ui/mark-reversed.svg. They are
+    the same artwork, drawn twice for two different jobs.
+  -->
+  <style>
+    .reversed { display: none; }
+    @media (prefers-color-scheme: dark) {
+      .standard { display: none; }
+      .reversed { display: block; }
+    }
+  </style>
+
+  <g class="standard">
+    <rect width="70" height="70" rx="15" fill="#0B2B28"/>
+    <rect x="13" y="35" width="9" height="17" rx="1.5" fill="#3ECF8E"/>
+    <rect x="24" y="41" width="7" height="11" rx="1.5" fill="#2F9BD6"/>
+    <rect x="33" y="23" width="12" height="29" rx="1.5" fill="#E2842F"/>
+    <rect x="47" y="31" width="10" height="21" rx="1.5" fill="#3ECF8E"/>
+    <path d="M11 27H59" stroke="#F4F7F6" stroke-width="2.5" stroke-linecap="round" stroke-dasharray="5 4.5" opacity=".55"/>
+    <rect x="13" y="53" width="44" height="3.5" rx="1.75" fill="#F4F7F6" opacity=".5"/>
+  </g>
+
+  <g class="reversed">
+    <rect x="4" y="4" width="62" height="62" rx="8" fill="#F4F7F6"/>
+    <rect x="13" y="34" width="9" height="17" rx="1.5" fill="#0B2B28"/>
+    <rect x="24" y="40" width="7" height="11" rx="1.5" fill="#0B2B28"/>
+    <rect x="33" y="22" width="12" height="29" rx="1.5" fill="#E2842F"/>
+    <rect x="47" y="30" width="10" height="21" rx="1.5" fill="#0B2B28"/>
+    <path d="M11 26H59" stroke="#0B2B28" stroke-width="2.5" stroke-linecap="round" stroke-dasharray="5 4.5" opacity=".45"/>
+    <rect x="13" y="52" width="44" height="3.5" rx="1.75" fill="#0B2B28" opacity=".5"/>
+  </g>
 </svg>
