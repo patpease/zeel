@@ -193,17 +193,23 @@ describe('comparison', () => {
   });
 });
 
-describe('caveats', () => {
-  it('carries Atlanta’s source defect through to the result', () => {
-    const atlanta = estimate(prototypeProgramme, 'climate-3a');
-    expect(atlanta.caveats.length).toBeGreaterThan(0);
-    expect(atlanta.caveats.join(' ')).toMatch(/fan/i);
+describe('caveats and repairs', () => {
+    it('carries no caveats at all, now that Atlanta is repaired', () => {
+    for (const c of dataset.cases) {
+      expect(estimate(prototypeProgramme, c.id).caveats, c.id).toEqual([]);
+    }
   });
 
-  it('leaves every other case clean', () => {
+  it('carries Atlanta’s repair through to the result', () => {
+    const atlanta = estimate(prototypeProgramme, 'climate-3a');
+    expect(atlanta.repairs.length).toBe(1);
+    expect(atlanta.repairs[0]).toMatch(/rederived from airflow/i);
+  });
+
+  it('leaves every other case unrepaired', () => {
     for (const c of dataset.cases) {
       if (c.id === 'climate-3a') continue;
-      expect(estimate(prototypeProgramme, c.id).caveats, c.id).toEqual([]);
+      expect(estimate(prototypeProgramme, c.id).repairs, c.id).toEqual([]);
     }
   });
 });

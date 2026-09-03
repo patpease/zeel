@@ -68,35 +68,54 @@ results, so this cannot drift.
 
 The Conversions sheet carries six locations; only five were ever simulated.
 
-## Defects carried forward, not repaired
+## Defects: recorded, and where justified, repaired
 
-The workbooks are a published result. Where their arithmetic is wrong, the
-extractor **records the defect on the case and carries the numbers through**
-rather than quietly correcting them. `dataQuality` on a case is empty when it
-audits clean.
+The workbooks are a published result, so nothing is corrected quietly. A defect
+is either **carried forward with a `dataQuality` finding** on the case, or
+**repaired with a `repairs` entry** saying what changed and what it moved. A case
+with an empty `dataQuality` audits clean; a case with a `repairs` entry says so
+in the interface, as a note rather than a warning.
 
-### Atlanta's fan allocation (`climate-3a`)
+### Atlanta's fan allocation (`climate-3a`) — repaired
 
 Two slips on the `3A - Atlanta` sheet:
 
 1. Write-up is labelled `General/Low Energy` but its fan energy is drawn from
    `High_Energy_Fan`, as on every other sheet.
 2. Its fan share divides by `SUM($H$22:$H$29)` — the lab rows **excluding
-   write-up itself** — where the 5A sheet correctly uses `$H$22:$H$30`. Write-up's
-   flow is meanwhile counted in the general system's denominator.
+   write-up itself** — where the 5A sheet correctly uses `$H$22:$H$30`.
+   Write-up's flow is meanwhile counted in the general system's denominator.
 
-The general air system's shares therefore sum to 0.837 instead of 1, and zones
-are allocated 19.5 MBtu more fan energy than the plant produced.
+The general air system's shares therefore summed to 0.837 instead of 1, and
+zones were allocated 19.5 MBtu more fan energy than the plant produced.
 
-**Impact is small at the building scale and material at the zone scale**: 0.58%
-of fan energy and 0.13% of Atlanta's electricity, so the headline EUI moves by
-about 0.17 kBtu/sf/yr — but Atlanta's general zones each carry roughly 21% less
-fan energy than they should, which is visible in exactly the zone-level
-comparison this tool exists for.
+**The label is the error, and the multiplier records the intent.** The four other
+climate zones are the same building in different weather and all put write-up on
+the lab system; ECM 3 is the case that deliberately moves it to the general AHU,
+and this is not that case.
 
-Repairing it is unambiguous — every other sheet shows the intended form — but it
-would change a published number, which is the author's call and not the
-pipeline's. `test/dataset.test.mjs` pins the magnitude so it cannot drift.
+So write-up rejoins the lab system and the fan allocation is rederived: each
+zone takes the share of its air system's fan energy that its airflow represents,
+and total electricity and EUI follow.
+
+**What licences that rederivation is that it is the workbook's own logic.** Run
+over the eleven sheets that audit clean it reproduces their stored figures
+*exactly* — worst error 0.0 on both share and energy — so applying it to the
+twelfth restores arithmetic the sheet was already attempting rather than
+substituting a new model. `test/dataset.test.mjs` holds that guarantee.
+
+The effect is the shape the defect predicted:
+
+| | Before | After |
+|---|---:|---:|
+| Building EUI | 131.45 | 131.28 |
+| General zones | — | +3% to +7% each |
+| Lab zones | — | about −1% each |
+
+0.13% at the building scale, which is why it was tempting to leave. The reason
+to repair it is the zone scale: Atlanta's atrium, office and classroom were each
+carrying roughly a fifth less fan energy than they should, in a tool whose whole
+purpose is comparing zones.
 
 ### The validation tab's baseline column is stale
 

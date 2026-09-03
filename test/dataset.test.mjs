@@ -73,12 +73,13 @@ describe('allocation shares', () => {
     }
   });
 
-  it('splits fan energy across the zones within each air system, except where the source does not', () => {
+  it('splits fan energy across the zones within each air system', () => {
+    // No exemptions any more: Atlanta was the one case that failed this, and it
+    // is repaired rather than excused.
     for (const c of data.cases) {
       const byGroup = {};
       for (const z of Object.values(c.zones)) byGroup[z.fanGroup] = (byGroup[z.fanGroup] ?? 0) + z.fanShare;
       for (const [group, total] of Object.entries(byGroup)) {
-        if (c.dataQuality.some((f) => f.code === 'fan-share-does-not-sum' && f.detail.includes(group))) continue;
         expect(Math.abs(total - 1), `${c.id}/${group}`).toBeLessThan(1e-9);
       }
     }
@@ -86,7 +87,6 @@ describe('allocation shares', () => {
 
   it('conserves fan energy between plant and zones', () => {
     for (const c of data.cases) {
-      if (c.dataQuality.some((f) => f.code === 'fan-energy-not-conserved')) continue;
       const zoneFans = Object.values(c.zones).reduce((a, z) => a + z.fanElectricity, 0);
       const plantFans = c.plant.labFans + c.plant.generalFans + c.plant.vivariumFans +
         c.plant.specialLabFans + c.plant.auditoriumFans;
@@ -95,25 +95,36 @@ describe('allocation shares', () => {
   });
 });
 
-describe('known defects in the source', () => {
-  it('flags Atlanta, and only Atlanta', () => {
+describe('the Atlanta repair', () => {
+  it('leaves every case auditing clean', () => {
     const flagged = data.cases.filter((c) => c.dataQuality.length).map((c) => c.id);
-    expect(flagged).toEqual(['climate-3a']);
+    expect(flagged).toEqual([]);
   });
 
-  it('pins the size of the Atlanta fan misallocation so it cannot drift unnoticed', () => {
-    const atlanta = caseById['climate-3a'];
-    const shareFinding = atlanta.dataQuality.find((f) => f.code === 'fan-share-does-not-sum');
-    const energyFinding = atlanta.dataQuality.find((f) => f.code === 'fan-energy-not-conserved');
+  it('is recorded on the case rather than applied silently', () => {
+    const repaired = data.cases.filter((c) => c.repairs.length).map((c) => c.id);
+    expect(repaired).toEqual(['climate-3a']);
 
-    // The general air system is short by write-up's flow, which the sheet counts
-    // in the denominator while paying write-up out of the lab fan total instead.
-    expect(shareFinding.magnitude).toBeCloseTo(-0.16261540266547858, 12);
+    const [repair] = caseById['climate-3a'].repairs;
+    expect(repair.code).toBe('fan-allocation');
+    expect(repair.detail).toMatch(/write-up from general to lab/);
+  });
 
-    // 19.5 MBtu on a 14,563 MBtu building: 0.58% of fan energy, 0.13% of electricity.
-    expect(energyFinding.magnitude).toBeCloseTo(19.483, 3);
-    const electricity = Object.values(atlanta.zones).reduce((a, z) => a + z.totalElectricity, 0);
-    expect(Math.abs(energyFinding.magnitude) / electricity).toBeLessThan(0.002);
+  it('puts write-up back on the lab air system, as every other case has it', () => {
+    for (const c of data.cases) {
+      // ECM 3 is the case that deliberately moves it, and only that one.
+      const expected = c.id === 'ecm-3-writeup' ? 'general' : 'lab';
+      expect(c.zones['write-up'].fanGroup, c.id).toBe(expected);
+    }
+  });
+
+  it('moves the building barely, and the zones materially', () => {
+    const [repair] = caseById['climate-3a'].repairs;
+    expect(repair.euiBefore).toBeCloseTo(131.4512, 3);
+    expect(repair.euiAfter).toBeCloseTo(131.2818, 3);
+    // 0.13% at the building scale — and the reason to repair it anyway is that
+    // Atlanta's general zones were each carrying about a fifth too little.
+    expect(Math.abs(repair.euiAfter / repair.euiBefore - 1)).toBeLessThan(0.002);
   });
 });
 

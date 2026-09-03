@@ -57,9 +57,11 @@ export interface Estimate {
   readonly fuels: readonly Slice[];
   /** Findings the source workbook carries for this case; empty when it audits clean. */
   readonly caveats: readonly string[];
+  /** Corrections made to the source data for this case. Disclosure, not warning. */
+  readonly repairs: readonly string[];
 }
 
-const EMPTY: Omit<Estimate, 'caseId' | 'locationId' | 'caveats'> = {
+const EMPTY: Omit<Estimate, 'caseId' | 'locationId' | 'caveats' | 'repairs'> = {
   totalArea: 0, electricity: 0, gas: 0, energy: 0, eui: 0,
   carbon: 0, carbonIntensity: 0, cost: 0, costIntensity: 0,
   zones: [], endUses: [], fanGroups: [], fuels: [],
@@ -79,10 +81,11 @@ export function estimate(
   const simulation: SimulationCase = getCase(caseId);
   const location = options.location ?? locationForCase(caseId);
   const caveats = simulation.dataQuality.map((f) => f.detail);
+  const repairs = simulation.repairs.map((r) => r.detail);
 
   const totalArea = Object.values(programme).reduce<number>((a, v) => a + (v ?? 0), 0);
   if (totalArea <= 0) {
-    return { ...EMPTY, caseId, locationId: location.id, caveats };
+    return { ...EMPTY, caseId, locationId: location.id, caveats, repairs };
   }
 
   const endUseTotals: Record<string, number> = Object.fromEntries(
@@ -170,6 +173,7 @@ export function estimate(
       { id: 'gas', label: 'Natural gas', energy: gas, share: share(gas) },
     ],
     caveats,
+    repairs,
   };
 }
 

@@ -235,6 +235,18 @@ export function App() {
             </div>
           )}
 
+          {/*
+            A repair is a note, not a warning. The data was corrected and the
+            reader is told; nothing about the number needs treating with caution
+            because of it. Warnings stay amber and mean the opposite.
+          */}
+          {result.repairs.length > 0 && (
+            <div className="caveat caveat--note" role="note">
+              <span className="caveat__lead">Corrected in this dataset</span>
+              {result.repairs.map((repair) => <p key={repair}>{repair}</p>)}
+            </div>
+          )}
+
           {result.caveats.length > 0 && (
             <div className="caveat" role="note">
               <span className="caveat__lead">Known defect in the source data</span>

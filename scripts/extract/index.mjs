@@ -10,7 +10,7 @@ import { resolve, dirname, join } from 'node:path';
 import { fileURLToPath } from 'node:url';
 import { Workbook, str, num, findLabel, headerMap } from './xlsx.mjs';
 import {
-  ZONES, FAN_GROUPS, LOCATIONS, CASES, PLANT_ITEMS, ZONE_COLUMNS, END_USES,
+  ZONES, FAN_GROUPS, LOCATIONS, CASES, PLANT_ITEMS, ZONE_COLUMNS, END_USES, FAN_PLANT,
   CLIMATE_WORKBOOK, MEASURE_WORKBOOK, RATE_VINTAGE,
 } from './cases.mjs';
 
@@ -97,6 +97,50 @@ function readCaseSheet(wb, sheetName) {
   };
 
   return { zones, plant, totals, headerRow: header.row };
+}
+
+/**
+ * Rederive fan allocation from airflow and the plant totals.
+ *
+ * Each zone takes the share of its air system's fan energy that its airflow
+ * represents, and everything downstream of that follows. This is the workbook's
+ * own logic, not a new model: run over the eleven sheets that audit clean it
+ * reproduces their stored figures exactly, which is the whole licence for using
+ * it to repair the twelfth.
+ *
+ * Returns the building EUI before and after, so the effect of a repair is
+ * measured rather than asserted.
+ */
+function rederiveFanAllocation(zones, plant) {
+  const flowByGroup = {};
+  for (const zone of Object.values(zones)) {
+    flowByGroup[zone.fanGroup] = (flowByGroup[zone.fanGroup] ?? 0) + zone.airFlow;
+  }
+
+  const euiOf = () => {
+    let energy = 0;
+    let area = 0;
+    for (const z of Object.values(zones)) {
+      energy += (z.totalElectricity + z.totalGas) * MBTU_TO_KBTU;
+      area += z.area;
+    }
+    return energy / area;
+  };
+  const before = euiOf();
+
+  for (const zone of Object.values(zones)) {
+    const total = flowByGroup[zone.fanGroup] ?? 0;
+    const plantItem = FAN_PLANT[zone.fanGroup];
+    if (total <= 0 || !plantItem) continue;
+
+    zone.fanShare = zone.airFlow / total;
+    zone.fanElectricity = zone.fanShare * (plant[plantItem] ?? 0);
+    zone.totalElectricity = zone.roomElectricity + zone.fanElectricity +
+      zone.heatingElectricity + zone.chwPumpElectricity + zone.chillerElectricity;
+    zone.eui = ((zone.totalElectricity + zone.totalGas) * MBTU_TO_KBTU) / zone.area;
+  }
+
+  return { before, after: euiOf() };
 }
 
 /**
@@ -282,6 +326,31 @@ function main() {
   for (const spec of CASES) {
     const read = readCaseSheet(workbooks[spec.workbook], spec.sheet);
 
+    // A repair is recorded on the case, never applied silently. The dataset ships
+    // corrected and says so; `dataQuality` below then proves the case audits
+    // clean, which is the evidence that the repair worked.
+    const repairs = [];
+    if (spec.regroup) {
+      const moved = [];
+      for (const [zoneId, group] of Object.entries(spec.regroup)) {
+        const zone = read.zones[zoneId];
+        if (!zone) throw new Error(`${spec.sheet}: cannot regroup unknown zone ${zoneId}`);
+        if (zone.fanGroup === group) continue;
+        moved.push(`${zoneId} from ${zone.fanGroup} to ${group}`);
+        zone.fanGroup = group;
+      }
+      const { before, after } = rederiveFanAllocation(read.zones, read.plant);
+      repairs.push({
+        code: 'fan-allocation',
+        detail:
+          `The sheet assigned fan energy that did not add up: ${moved.join(', ')}, and the ` +
+          'fan allocation rederived from airflow. The rederivation reproduces every other ' +
+          'case in this dataset exactly.',
+        euiBefore: before,
+        euiAfter: after,
+      });
+    }
+
     // Where a case appears in both workbooks, prove the copies agree rather
     // than trusting that they do.
     if (spec.crossCheck) {
@@ -322,6 +391,7 @@ function main() {
       },
       plant: read.plant,
       zones: read.zones,
+      repairs,
       dataQuality: auditCase(spec.sheet, read),
     });
   }
@@ -379,6 +449,17 @@ function main() {
   for (const c of cases) {
     console.log(`  ${c.id.padEnd(20)} ${c.prototype.blendedEui.toFixed(2).padStart(7)} kBtu/sf/yr`);
   }
+  const repaired = cases.filter((c) => c.repairs.length);
+  if (repaired.length) {
+    console.log('\nRepairs applied and recorded:');
+    for (const c of repaired) {
+      for (const r of c.repairs) {
+        console.log(`  ${c.id}: ${r.detail}`);
+        console.log(`    building EUI ${r.euiBefore.toFixed(2)} -> ${r.euiAfter.toFixed(2)}`);
+      }
+    }
+  }
+
   const flagged = cases.filter((c) => c.dataQuality.length);
   if (flagged.length) {
     console.log('\nData-quality findings carried into the dataset:');

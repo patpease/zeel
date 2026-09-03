@@ -81,7 +81,25 @@ export const CASES = [
   },
   { id: 'climate-6a', kind: 'climate', label: 'Minneapolis, 6A', locationId: 'minneapolis-6a', workbook: CLIMATE_WORKBOOK, sheet: '6A - Minneapolis' },
   { id: 'climate-4a', kind: 'climate', label: 'Washington DC, 4A', locationId: 'washington-4a', workbook: CLIMATE_WORKBOOK, sheet: '4A - Washington DC' },
-  { id: 'climate-3a', kind: 'climate', label: 'Atlanta, 3A', locationId: 'atlanta-3a', workbook: CLIMATE_WORKBOOK, sheet: '3A - Atlanta' },
+  {
+    id: 'climate-3a', kind: 'climate', label: 'Atlanta, 3A', locationId: 'atlanta-3a',
+    workbook: CLIMATE_WORKBOOK, sheet: '3A - Atlanta',
+    /**
+     * Write-up rejoins the lab air system, and the fan allocation is rederived.
+     *
+     * The 3A sheet labels write-up `General/Low Energy` while paying its fan
+     * energy from `High_Energy_Fan`, and divides its share by a range that
+     * excludes itself. Every other sheet — including the four other climate
+     * zones, which are the same building in different weather — puts write-up on
+     * the lab system with the denominator including it. ECM 3 is the case that
+     * deliberately moves it to the general AHU, and this is not that case.
+     *
+     * So the label is the error and the multiplier records the intent. Repairing
+     * it is not a judgement call about the building: it restores the arithmetic
+     * the sheet was already trying to perform.
+     */
+    regroup: { 'write-up': 'lab' },
+  },
   { id: 'climate-5b', kind: 'climate', label: 'Denver, 5B', locationId: 'denver-5b', workbook: CLIMATE_WORKBOOK, sheet: '5B - Denver' },
 
   {
@@ -124,6 +142,20 @@ export const CASES = [
     note: 'A reverse measure. It raises energy use, and is included to show what the baseline control is worth.',
   },
 ];
+
+/**
+ * Which plant item pays for each air system's fans. This is the mapping the
+ * workbook performs through named ranges, and rederiving an allocation from it
+ * reproduces every clean sheet exactly — which is what makes it safe to use as
+ * a repair.
+ */
+export const FAN_PLANT = {
+  lab: 'labFans',
+  general: 'generalFans',
+  vivarium: 'vivariumFans',
+  'special-lab': 'specialLabFans',
+  auditorium: 'auditoriumFans',
+};
 
 /** Building-wide plant totals, MBtu/yr, as labelled in column B of each case sheet. */
 export const PLANT_ITEMS = [

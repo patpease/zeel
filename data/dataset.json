@@ -1,6 +1,6 @@
 {
   "schemaVersion": 1,
-  "generated": "2026-08-31T16:44:25.457Z",
+  "generated": "2026-09-02T01:06:49.936Z",
   "about": {
     "name": "Zoned Energy Estimator for Labs",
     "summary": "Zone energy intensities for a 115,000 sf STEM laboratory prototype, simulated in IES:VE in 2019 and allocated to zones by flow share. For early planning and proposal work: the output conveys ideas, it does not predict savings.",
@@ -990,6 +990,7 @@
           "eui": 624.3400413601466
         }
       },
+      "repairs": [],
       "dataQuality": []
     },
     {
@@ -1508,6 +1509,7 @@
           "eui": 627.1848090486933
         }
       },
+      "repairs": [],
       "dataQuality": []
     },
     {
@@ -2026,6 +2028,7 @@
           "eui": 562.8225459904877
         }
       },
+      "repairs": [],
       "dataQuality": []
     },
     {
@@ -2044,7 +2047,7 @@
         "totalArea": 115000,
         "totalElectricity": 0,
         "totalGas": 0,
-        "blendedEui": 131.4512048421939
+        "blendedEui": 131.28179130434785
       },
       "plant": {
         "chillers": 3547.526,
@@ -2088,8 +2091,8 @@
           "area": 4770,
           "roomElectricity": 46.411,
           "airFlow": 5593955,
-          "fanShare": 0.2495021413222986,
-          "fanElectricity": 75.89780288381927,
+          "fanShare": 0.31735966390558323,
+          "fanElectricity": 96.5398576810867,
           "reheatFlow": 190.5,
           "mainHeatCoilFlow": 119.68617719230663,
           "heatingShare": 0.007396450727242968,
@@ -2102,17 +2105,17 @@
           "heatingGas": 77.27697179444665,
           "chwPumpElectricity": 1.5568714746656396,
           "chillerElectricity": 86.51246119319399,
-          "totalElectricity": 222.3768946078357,
+          "totalElectricity": 243.01894940510311,
           "totalGas": 77.27697179444665,
-          "eui": 62.82051706546799
+          "eui": 67.1479918657337
         },
         "boh": {
           "fanGroup": "general",
           "area": 23040,
           "roomElectricity": 248.587,
           "airFlow": 593540.8,
-          "fanShare": 0.026473166223566363,
-          "fanElectricity": 8.053057745710216,
+          "fanShare": 0.03367311835762909,
+          "fanElectricity": 10.243261585035695,
           "reheatFlow": 31.9,
           "mainHeatCoilFlow": 12.699177837444784,
           "heatingShare": 0.0010634762139825895,
@@ -2125,17 +2128,17 @@
           "heatingGas": 0.06109032763601587,
           "chwPumpElectricity": 0.27653895793289396,
           "chillerElectricity": 15.366757151044743,
-          "totalElectricity": 274.00855900024925,
+          "totalElectricity": 276.19876283957467,
           "totalGas": 0.06109032763601587,
-          "eui": 11.895384085411687
+          "eui": 11.990445015937965
         },
         "cafe-kitchen": {
           "fanGroup": "general",
           "area": 300,
           "roomElectricity": 18.226,
           "airFlow": 933075.4,
-          "fanShare": 0.04161712246794268,
-          "fanElectricity": 12.65980380338076,
+          "fanShare": 0.05293580219050165,
+          "fanElectricity": 16.10291221894403,
           "reheatFlow": 852.2,
           "mainHeatCoilFlow": 19.9637336478721,
           "heatingShare": 0.020796916678899463,
@@ -2148,17 +2151,17 @@
           "heatingGas": 11.187490169706022,
           "chwPumpElectricity": 0.23116189052466396,
           "chillerElectricity": 12.845237650497312,
-          "totalElectricity": 77.69962708224718,
+          "totalElectricity": 81.14273549781043,
           "totalGas": 11.187490169706022,
-          "eui": 296.290390839844
+          "eui": 307.7674188917215
         },
         "computational": {
           "fanGroup": "general",
           "area": 6720,
           "roomElectricity": 101.855,
           "airFlow": 1837417,
-          "fanShare": 0.08195265710968248,
-          "fanElectricity": 24.929752434794082,
+          "fanShare": 0.10424146092959366,
+          "fanElectricity": 31.709939690399604,
           "reheatFlow": 520,
           "mainHeatCoilFlow": 39.312689615514685,
           "heatingShare": 0.01333692167494013,
@@ -2171,17 +2174,17 @@
           "heatingGas": 6.020089391459893,
           "chwPumpElectricity": 1.076888630684911,
           "chillerElectricity": 59.8407045074344,
-          "totalElectricity": 209.33792669549487,
+          "totalElectricity": 216.11811395110038,
           "totalGas": 6.020089391459893,
-          "eui": 32.047323822463504
+          "eui": 33.05628025930957
         },
         "office": {
           "fanGroup": "general",
           "area": 10420,
           "roomElectricity": 157.935,
           "airFlow": 3200666.5,
-          "fanShare": 0.1427564478814268,
-          "fanElectricity": 43.42608317618639,
+          "fanShare": 0.1815821623008872,
+          "fanElectricity": 55.23674902544298,
           "reheatFlow": 1030.2,
           "mainHeatCoilFlow": 68.48026804872043,
           "heatingShare": 0.026198248230056884,
@@ -2194,17 +2197,17 @@
           "heatingGas": 9.64342428423731,
           "chwPumpElectricity": 1.6688644747308894,
           "chillerElectricity": 92.73570455638497,
-          "totalElectricity": 338.2652888300439,
+          "totalElectricity": 350.0759546793005,
           "totalGas": 9.64342428423731,
-          "eui": 33.38855212229186
+          "eui": 34.522013336232035
         },
         "restroom": {
           "fanGroup": "general",
           "area": 1000,
           "roomElectricity": 6.042,
           "airFlow": 367102.2,
-          "fanShare": 0.01637352910134721,
-          "fanElectricity": 4.980778432042517,
+          "fanShare": 0.02082666571522299,
+          "fanElectricity": 6.3354092305736875,
           "reheatFlow": 333.8,
           "mainHeatCoilFlow": 7.854381909916256,
           "heatingShare": 0.008146816290838969,
@@ -2217,17 +2220,17 @@
           "heatingGas": 0.46798571501095376,
           "chwPumpElectricity": 0.09094660363756595,
           "chillerElectricity": 5.053734136620037,
-          "totalElectricity": 29.383485257420404,
+          "totalElectricity": 30.738116055951572,
           "totalGas": 0.46798571501095376,
-          "eui": 29.851470972431358
+          "eui": 31.206101770962526
         },
         "classroom": {
           "fanGroup": "general",
           "area": 7500,
           "roomElectricity": 133.669,
           "airFlow": 4339784.5,
-          "fanShare": 0.19356350303628128,
-          "fanElectricity": 58.88143693312766,
+          "fanShare": 0.2462072988328758,
+          "fanElectricity": 74.89552168306432,
           "reheatFlow": 272.5,
           "mainHeatCoilFlow": 92.85241240650413,
           "heatingShare": 0.008711900513763719,
@@ -2240,17 +2243,17 @@
           "heatingGas": 29.551772689575913,
           "chwPumpElectricity": 1.1785175263931302,
           "chillerElectricity": 65.48803380798101,
-          "totalElectricity": 273.3497120617458,
+          "totalElectricity": 289.36379681168245,
           "totalGas": 29.551772689575913,
-          "eui": 40.38686463350955
+          "eui": 42.522075933501114
         },
         "corridor": {
           "fanGroup": "general",
           "area": 5790,
           "roomElectricity": 49.653,
           "airFlow": 761005.5,
-          "fanShare": 0.03394244354987598,
-          "fanElectricity": 10.325189500541624,
+          "fanShare": 0.04317382776770645,
+          "fanElectricity": 13.133348885453,
           "reheatFlow": 119.6,
           "mainHeatCoilFlow": 16.28219017087551,
           "heatingShare": 0.003240137692162986,
@@ -2263,9 +2266,9 @@
           "heatingGas": 0.18612646958861057,
           "chwPumpElectricity": 0.20351913996504511,
           "chillerElectricity": 11.309181255363114,
-          "totalElectricity": 76.74714494450274,
+          "totalElectricity": 79.5553043294141,
           "totalGas": 0.18612646958861057,
-          "eui": 13.287266220050318
+          "eui": 13.772267840933111
         },
         "mri-lab": {
           "fanGroup": "special-lab",
@@ -2318,8 +2321,8 @@
           "area": 2750,
           "roomElectricity": 443.434,
           "airFlow": 6802880.5,
-          "fanShare": 0.07266114907535035,
-          "fanElectricity": 119.94728102601054,
+          "fanShare": 0.06912186183406646,
+          "fanElectricity": 114.10471059099291,
           "reheatFlow": 1800.9,
           "mainHeatCoilFlow": 160.5448088819866,
           "heatingShare": 0.046771039297820595,
@@ -2332,17 +2335,17 @@
           "heatingGas": 13.297660994458465,
           "chwPumpElectricity": 3.462972632199525,
           "chillerElectricity": 192.43096834348225,
-          "totalElectricity": 835.1486986238745,
+          "totalElectricity": 829.3061281888569,
           "totalGas": 13.297660994458465,
-          "eui": 308.52594895212104
+          "eui": 306.40137788484196
         },
         "instruction-lab": {
           "fanGroup": "lab",
           "area": 7140,
           "roomElectricity": 217.925,
           "airFlow": 17558330,
-          "fanShare": 0.1875394450401115,
-          "fanElectricity": 309.5856149255351,
+          "fanShare": 0.17840449502191671,
+          "fanElectricity": 294.5058586742996,
           "reheatFlow": 5950.7,
           "mainHeatCoilFlow": 414.3684038161264,
           "heatingShare": 0.15177631463303226,
@@ -2355,17 +2358,17 @@
           "heatingGas": 45.496381457132344,
           "chwPumpElectricity": 6.671625395014662,
           "chillerElectricity": 370.7298530893122,
-          "totalElectricity": 1151.1284878496351,
+          "totalElectricity": 1136.0487315983996,
           "totalGas": 45.496381457132344,
-          "eui": 167.59451951075175
+          "eui": 165.48250883130703
         },
         "open-lab-bio": {
           "fanGroup": "lab",
           "area": 4500,
           "roomElectricity": 395.064,
           "airFlow": 11179930,
-          "fanShare": 0.11941214613162492,
-          "fanElectricity": 197.12270494257925,
+          "fanShare": 0.11359564184238348,
+          "fanElectricity": 187.52095925800245,
           "reheatFlow": 3538.3,
           "mainHeatCoilFlow": 263.84113687782525,
           "heatingShare": 0.09066280719371107,
@@ -2378,17 +2381,17 @@
           "heatingGas": 28.38728398510304,
           "chwPumpElectricity": 5.07373021206314,
           "chillerElectricity": 281.9377804902727,
-          "totalElectricity": 1026.2743226843834,
+          "totalElectricity": 1016.6725769998066,
           "totalGas": 28.38728398510304,
-          "eui": 234.36924592655257
+          "eui": 232.23552466331324
         },
         "open-lab-chem": {
           "fanGroup": "lab",
           "area": 4500,
           "roomElectricity": 395.064,
           "airFlow": 13184017,
-          "fanShare": 0.14081767637237685,
-          "fanElectricity": 232.45844053128678,
+          "fanShare": 0.13395851970235012,
+          "fanElectricity": 221.13550932016673,
           "reheatFlow": 3846.4,
           "mainHeatCoilFlow": 311.1366559447667,
           "heatingShare": 0.09913728361704915,
@@ -2401,17 +2404,17 @@
           "heatingGas": 28.87409180876527,
           "chwPumpElectricity": 5.458400739124719,
           "chillerElectricity": 303.3132084469879,
-          "totalElectricity": 1097.1177235940524,
+          "totalElectricity": 1085.7947923829324,
           "totalGas": 28.87409180876527,
-          "eui": 250.22040342284836
+          "eui": 247.70419648704393
         },
         "open-lab-general": {
           "fanGroup": "lab",
           "area": 4500,
           "roomElectricity": 395.064,
           "airFlow": 11367617,
-          "fanShare": 0.12141681945882878,
-          "fanElectricity": 200.43197155896755,
+          "fanShare": 0.11550266856173427,
+          "fanElectricity": 190.66903319766547,
           "reheatFlow": 3598.2,
           "mainHeatCoilFlow": 268.2704625942822,
           "heatingShare": 0.09219675268504594,
@@ -2424,17 +2427,17 @@
           "heatingGas": 28.475399949907278,
           "chwPumpElectricity": 4.9705189195051265,
           "chillerElectricity": 276.20252033076457,
-          "totalElectricity": 1026.2335333110047,
+          "totalElectricity": 1016.4705949497027,
           "totalGas": 28.475399949907278,
-          "eui": 234.37976294686936
+          "eui": 232.21022108880223
         },
         "support-lab-bio": {
           "fanGroup": "lab",
           "area": 3000,
           "roomElectricity": 483.746,
           "airFlow": 7468173,
-          "fanShare": 0.07976709743372773,
-          "fanElectricity": 131.67761003325933,
+          "fanShare": 0.07588168309863824,
+          "fanElectricity": 125.26366129883765,
           "reheatFlow": 2424.7,
           "mainHeatCoilFlow": 176.2454017798214,
           "heatingShare": 0.06202005738181796,
@@ -2447,17 +2450,17 @@
           "heatingGas": 26.741929864908652,
           "chwPumpElectricity": 4.115070168332096,
           "chillerElectricity": 228.66681934779353,
-          "totalElectricity": 948.8164212760063,
+          "totalElectricity": 942.4024725415845,
           "totalGas": 26.741929864908652,
-          "eui": 325.1861170469717
+          "eui": 323.0481341354977
         },
         "support-lab-chem": {
           "fanGroup": "lab",
           "area": 3000,
           "roomElectricity": 483.746,
           "airFlow": 8825301,
-          "fanShare": 0.09426249830433424,
-          "fanElectricity": 155.60626990083566,
+          "fanShare": 0.08967102043995166,
+          "fanElectricity": 148.02676843778164,
           "reheatFlow": 2562.9,
           "mainHeatCoilFlow": 208.2729900034265,
           "heatingShare": 0.06607916788155087,
@@ -2470,17 +2473,17 @@
           "heatingGas": 26.97510140845531,
           "chwPumpElectricity": 4.459842213642057,
           "chillerElectricity": 247.82516265084746,
-          "totalElectricity": 998.8330154361491,
+          "totalElectricity": 991.2535139730953,
           "totalGas": 26.97510140845531,
-          "eui": 341.9360389482015
+          "eui": 339.4095384605169
         },
         "support-lab-general": {
           "fanGroup": "lab",
           "area": 6500,
           "roomElectricity": 1048.116,
           "airFlow": 17238482,
-          "fanShare": 0.18412316818364566,
-          "fanElectricity": 303.94610708152584,
+          "fanShare": 0.17515462325599307,
+          "fanElectricity": 289.1410483600352,
           "reheatFlow": 5190.3,
           "mainHeatCoilFlow": 406.8201401017651,
           "heatingShare": 0.1334644364408794,
@@ -2493,17 +2496,17 @@
           "heatingGas": 57.83692930193687,
           "chwPumpElectricity": 9.10487904859481,
           "chillerElectricity": 505.9412470316153,
-          "totalElectricity": 2083.618512818097,
+          "totalElectricity": 2068.813454096606,
           "totalGas": 57.83692930193687,
-          "eui": 329.45468340308213
+          "eui": 327.17698206131433
         },
         "write-up": {
-          "fanGroup": "general",
+          "fanGroup": "lab",
           "area": 9000,
           "roomElectricity": 152.293,
           "airFlow": 4793922,
-          "fanShare": 0.05120358664209987,
-          "fanElectricity": 84.52565194269906,
+          "fanShare": 0.048709486242965984,
+          "fanElectricity": 80.40845086221842,
           "reheatFlow": 501.9,
           "mainHeatCoilFlow": 113.13432468571966,
           "heatingShare": 0.014665615080844765,
@@ -2516,9 +2519,9 @@
           "heatingGas": 28.65755121910505,
           "chwPumpElectricity": 2.1108181010000346,
           "chillerElectricity": 117.2942481253152,
-          "totalElectricity": 380.0147482528433,
+          "totalElectricity": 375.89754717236264,
           "totalGas": 28.65755121910505,
-          "eui": 45.40803327466093
+          "eui": 44.950566487940854
         },
         "vivarium": {
           "fanGroup": "vivarium",
@@ -2539,34 +2542,20 @@
           "heatingGas": 36.66852035270214,
           "chwPumpElectricity": 8.248974677969818,
           "chillerElectricity": 458.38022812047984,
-          "totalElectricity": 2425.8058807664397,
+          "totalElectricity": 2425.80588076644,
           "totalGas": 36.66852035270214,
-          "eui": 533.0031171253554
+          "eui": 533.0031171253555
         }
       },
-      "dataQuality": [
+      "repairs": [
         {
-          "code": "fan-share-does-not-sum",
-          "detail": "fan shares for the general air system sum to 0.8373845973345214, not 1",
-          "magnitude": -0.16261540266547858,
-          "zones": [
-            "atrium",
-            "boh",
-            "cafe-kitchen",
-            "computational",
-            "office",
-            "restroom",
-            "classroom",
-            "corridor",
-            "write-up"
-          ]
-        },
-        {
-          "code": "fan-energy-not-conserved",
-          "detail": "zones are allocated 3401.645 MBtu of fan energy against a plant total of 3382.162 MBtu",
-          "magnitude": 19.48255685230106
+          "code": "fan-allocation",
+          "detail": "The sheet assigned fan energy that did not add up: write-up from general to lab, and the fan allocation rederived from airflow. The rederivation reproduces every other case in this dataset exactly.",
+          "euiBefore": 131.4512048421939,
+          "euiAfter": 131.28179130434785
         }
-      ]
+      ],
+      "dataQuality": []
     },
     {
       "id": "climate-5b",
@@ -3084,6 +3073,7 @@
           "eui": 683.4167197855868
         }
       },
+      "repairs": [],
       "dataQuality": []
     },
     {
@@ -3604,6 +3594,7 @@
           "eui": 585.3806990202754
         }
       },
+      "repairs": [],
       "dataQuality": []
     },
     {
@@ -4124,6 +4115,7 @@
           "eui": 498.6167475029565
         }
       },
+      "repairs": [],
       "dataQuality": []
     },
     {
@@ -4644,6 +4636,7 @@
           "eui": 587.6955840718116
         }
       },
+      "repairs": [],
       "dataQuality": []
     },
     {
@@ -5165,6 +5158,7 @@
           "eui": 583.5888372966995
         }
       },
+      "repairs": [],
       "dataQuality": []
     },
     {
@@ -5686,6 +5680,7 @@
           "eui": 585.0188226238693
         }
       },
+      "repairs": [],
       "dataQuality": []
     },
     {
@@ -6207,6 +6202,7 @@
           "eui": 582.5123534518044
         }
       },
+      "repairs": [],
       "dataQuality": []
     },
     {
@@ -6727,6 +6723,7 @@
           "eui": 564.0826125333411
         }
       },
+      "repairs": [],
       "dataQuality": []
     }
   ],

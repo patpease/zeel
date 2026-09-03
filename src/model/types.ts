@@ -79,6 +79,13 @@ export interface DataQualityFinding {
   readonly zones?: readonly ZoneId[];
 }
 
+export interface Repair {
+  readonly code: 'fan-allocation';
+  readonly detail: string;
+  readonly euiBefore: number;
+  readonly euiAfter: number;
+}
+
 export interface SimulationCase {
   readonly id: CaseId;
   readonly kind: 'baseline' | 'climate' | 'measure' | 'reverse-measure';
@@ -104,6 +111,8 @@ export interface SimulationCase {
   readonly plant: Readonly<Record<string, number>>;
   readonly zones: Readonly<Record<ZoneId, ZoneRecord>>;
   readonly dataQuality: readonly DataQualityFinding[];
+  /** Corrections made to the source, recorded rather than applied silently. */
+  readonly repairs: readonly Repair[];
 }
 
 export interface Study {

@@ -80,7 +80,9 @@ describe('the workbook summary tabs', () => {
     'baseline': 133.00111304347826,
     'climate-6a': 140.23765217391303,
     'climate-4a': 134.65954086956521,
-    'climate-3a': 131.4512048421939,
+    // Repaired: the workbook's own summary reads 131.4512, computed from a fan
+    // allocation that did not add up. See the Atlanta repair in dataset.test.mjs.
+    'climate-3a': 131.28179130434785,
     'climate-5b': 133.07113913043477,
   };
 

@@ -62,7 +62,7 @@ describe('the chips carry their own result', () => {
     render(<App />);
     expect(chip(/6A/).textContent).toMatch(/140\.2/);
     expect(chip(/6A/).textContent).toMatch(/\+5\.4%/);
-    expect(chip(/3A/).textContent).toMatch(/-1\.2%/);
+    expect(chip(/3A/).textContent).toMatch(/-1\.3%/);
   });
 
   it('ranks the measures without anything being clicked', async () => {
@@ -131,12 +131,16 @@ describe('the comparison strip', () => {
   });
 });
 
-describe('carrying the caveat through', () => {
-  it('warns on Atlanta, where the source data misallocates fan energy', async () => {
+describe('disclosing the repair', () => {
+  it('tells the reader Atlanta was corrected, as a note rather than a warning', async () => {
     const user = userEvent.setup();
     render(<App />);
     await user.click(chip(/3A/));
-    const caveat = document.querySelector('.caveat:not(.caveat--note)');
-    expect(caveat?.textContent).toMatch(/fan/i);
+
+    const note = document.querySelector('.caveat--note');
+    expect(note?.querySelector('.caveat__lead')?.textContent).toBe('Corrected in this dataset');
+    expect(note?.textContent).toMatch(/rederived from airflow/i);
+    // Amber means the data is reporting a defect. Nothing here is defective.
+    expect(document.querySelector('.caveat:not(.caveat--note)')).toBeNull();
   });
 });

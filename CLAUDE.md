@@ -66,20 +66,24 @@ ships two study modes instead of inventing the missing cells. Every case carries
 `provenance.kind === 'simulated'`, and the schema pins that to a constant so a
 derived case cannot be added without an explicit schema change.
 
-## Defects are recorded, not repaired
+## Defects are recorded — and repaired only when the sheet's own logic says how
 
-The workbooks are a published result. Where their arithmetic is wrong the
-extractor writes a `dataQuality` finding onto the case and carries the numbers
-through unchanged. Repairing them would change published numbers, which is the
-author's call.
+Nothing is corrected quietly. A defect either carries forward with a
+`dataQuality` finding, or is repaired with a `repairs` entry naming what changed
+and what it moved. Empty `dataQuality` means the case audits clean.
 
-Two live findings, both documented in full in `docs/extraction.md`:
+- **`climate-3a` is repaired.** Write-up was labelled general while paid from the
+  lab fan total, so the general shares summed to 0.837. It rejoins the lab system
+  and the fan allocation is rederived from airflow. **The licence for that is
+  that the rederivation reproduces the other eleven cases exactly** — it is the
+  workbook's logic, not a new model, and a test pins that. Building EUI moves
+  0.13%; Atlanta's general zones move 3–7% each, which is the reason to bother.
+- **The validation tab's baseline column is stale.** Carried forward, not
+  repaired: it is the basis the published residuals were computed on, so
+  replacing it would misreport what the study reported. Both are kept.
 
-- **`climate-3a` misallocates fan energy.** Write-up is labelled general but paid
-  from the lab fan total, and its share divides by a range that excludes itself.
-  0.13% of Atlanta's electricity, but ~21% at the zone level for general zones.
-- **The validation tab's baseline column is stale.** It reproduces the published
-  residuals; the shipped baseline gives different ones. Both are kept.
+A repair surfaces in the interface as a **note**, never a warning. Amber means
+the data is reporting a defect; a repaired case has none.
 
 And a trap worth knowing: **the workbook's "Average" cells average signed
 errors.** The 12.97% it prints is not a mean absolute error — that is 16.4% as
