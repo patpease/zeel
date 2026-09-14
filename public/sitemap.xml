@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+  One route. ZEEL has no client-side router — which is also why the Worker is
+  configured with not_found_handling "none" — so there is nothing else to list.
+-->
+<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
+  <url>
+    <loc>https://zeel.peasestudio.com/</loc>
+  </url>
+</urlset>

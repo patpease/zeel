@@ -90,7 +90,9 @@ export function App() {
             dangerouslySetInnerHTML={{ __html: markReversedSvg }}
           />
           <div className="brand-text">
-            <span className="brand-org">{BRAND.organisation}</span>
+            <a className="brand-org" href={BRAND.organisationUrl}>
+              {BRAND.organisation}
+            </a>
             <h1>
               {BRAND.appName}
               <span className="badge">Beta</span>

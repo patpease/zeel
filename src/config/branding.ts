@@ -10,6 +10,11 @@ export const APP_VERSION = '0.1.0';
 export const BRAND = {
   /** The parent identity, shown as an endorsement above the product name. */
   organisation: 'Pease Studio',
+  /**
+   * Where that endorsement points. The tool sits on its own subdomain, so this
+   * is the only route a reader — or a crawler — has back to the studio.
+   */
+  organisationUrl: 'https://peasestudio.com/',
   appName: 'ZEEL',
   /**
    * Psychrometric Studio's tagline is a positioning line because its name
@@ -21,11 +26,11 @@ export const BRAND = {
   /** Provisional until the real tile is drawn; see src/ui/mark.svg. */
   markIsPlaceholder: true,
   /**
-   * Where the beta actually lives. peasestudio.com is registered but not yet
-   * serving, so the tool is on a workers.dev subdomain until it is — and the
-   * host is stamped on every export, so it has to be the one that resolves.
+   * Where the tool actually lives. Stamped on every export, so it has to be
+   * the host that resolves — which is now the studio subdomain, not the
+   * workers.dev address the beta launched on.
    */
-  host: 'zeel.patpease0.workers.dev',
+  host: 'zeel.peasestudio.com',
   /**
    * The beta exists to find out whether anyone wants this, so it needs somewhere
    * to say so. Issues rather than an address: no public contact email has been

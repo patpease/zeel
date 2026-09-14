@@ -1,0 +1,5 @@
+# A public tool with no user data and nothing behind a login.
+User-agent: *
+Allow: /
+
+Sitemap: https://zeel.peasestudio.com/sitemap.xml
