@@ -9,6 +9,7 @@ import { SunIcon, MoonIcon } from './Icon.js';
 import { PaletteSelect } from './PaletteSelect.js';
 import { usePalette } from './usePalette.js';
 import { BRAND } from '../config/branding.js';
+import { SiteFooter } from './SiteFooter.js';
 import { ProgrammeEditor } from './ProgrammeEditor.js';
 import { ZoneBars } from '../charts/ZoneBars.js';
 import { AreaEnergyRings } from '../charts/AreaEnergyRings.js';
@@ -281,24 +282,22 @@ export function App() {
         </section>
       </main>
 
-      <footer className="colophon">
-        <span>
-          {dataset.cases.length} simulated cases · {dataset.zones.length} zone types ·{' '}
-          {simulation.provenance.tool}, {simulation.provenance.completed}
-        </span>
+      {/* The two things the colophon carried that nothing else does. The case
+          counts, the provenance date and the "nothing is kept" line all appear
+          elsewhere on the page and went with it; these do not. The study is the
+          attribution for the whole dataset, and the palette line is how an
+          MIT-licensed palette discharges its notice inside the running app —
+          which is the only copy most people will ever see. */}
+      <div className="provenance">
         <span>{dataset.about.study}</span>
-        <span>Nothing is uploaded and nothing is kept.</span>
-        <span>
-          <a href={BRAND.feedbackUrl} target="_blank" rel="noreferrer noopener">
-            Tell me what is wrong with it
-          </a>
-        </span>
         <span>
           Palette: {palette.label} — {palette.source}
           {palette.licence !== 'In-house' && `, ${palette.licence}`}
           {palette.derivation === 're-stepped' && ', re-stepped for legibility'}
         </span>
-      </footer>
+      </div>
+
+      <SiteFooter />
     </div>
   );
 }
