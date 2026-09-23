@@ -70,3 +70,21 @@ export const BENCHMARKS_IP = {
   onsiteRenewablesHigh: 30,
   i2slLabMean: 531,
 } as const;
+
+/**
+ * The same landmarks as a reader of SI holds them: whole kWh/m²/yr, rounded
+ * from the IP set once, here, rather than converted on the fly into figures
+ * like 78.9 that nobody carries in their head. 25–30 kBtu/sf/yr is 79–95;
+ * 531 is 1,675. A test holds each within half a unit of the exact conversion.
+ */
+export const BENCHMARKS_SI = {
+  netZeroLow: 79,
+  netZeroHigh: 95,
+  onsiteRenewablesLow: 47,
+  onsiteRenewablesHigh: 95,
+  i2slLabMean: 1675,
+} as const;
+
+/** The landmarks in whichever system the reader is in. */
+export const benchmarksFor = (system: UnitSystem) =>
+  system === 'si' ? BENCHMARKS_SI : BENCHMARKS_IP;

@@ -98,3 +98,27 @@ describe('figures', () => {
     expect(figure(/Intensity and total energy by zone/i)).toBeDefined();
   });
 });
+
+describe('the benchmark scale', () => {
+  const ticks = (container: HTMLElement) =>
+    [...container.querySelectorAll('.benchmark__tick')].map((t) => t.textContent);
+
+  it('names its landmarks in IP by default', () => {
+    const { container } = render(<App />);
+    expect(ticks(container)).toEqual(['Net zero 25–30', 'i2SL mean 531']);
+  });
+
+  /*
+   * It printed the IP landmarks in SI too: "Net zero 25–30" and "i2SL mean 531"
+   * beside a value in kWh/m²/yr, which reads as a scale where 420 is almost
+   * the laboratory mean.
+   */
+  it('names them in SI when the reader is in SI', async () => {
+    const user = userEvent.setup();
+    const { container } = render(<App />);
+    const units = screen.getByRole('group', { name: 'Unit system' });
+    await user.click(within(units).getByRole('button', { name: 'SI' }));
+    expect(ticks(container)).toEqual(['Net zero 79–95', 'i2SL mean 1,675']);
+    expect(container.querySelector('.benchmark__value')?.textContent).toContain('kWh/m²/yr');
+  });
+});

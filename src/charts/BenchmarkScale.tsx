@@ -1,7 +1,7 @@
 import { useId, useRef } from 'react';
 import { BENCHMARKS } from '../education/benchmarks.js';
 import type { UnitSystem } from '../units/units.js';
-import { eui as euiUnit } from '../units/units.js';
+import { benchmarksFor, eui as euiUnit } from '../units/units.js';
 import { formatEui } from '../ui/format.js';
 import { useWidth } from './useWidth.js';
 
@@ -34,6 +34,10 @@ export function BenchmarkScale({ eui, units }: Props) {
   const W = measured.compact ? measured.width : STANDARD_W;
   if (eui <= 0) return null;
 
+  // Positions stay in IP, like the engine; only the words on the scale follow
+  // the reader's system. They used to print the IP landmarks in both — a bare
+  // 25–30 and 531 beside a value in kWh/m²/yr.
+  const landmarks = benchmarksFor(units);
   const x = (value: number) => PAD + (Math.min(value, MAX) / MAX) * (W - PAD * 2);
   const here = x(eui);
   const overrun = eui > MAX;
@@ -61,7 +65,7 @@ export function BenchmarkScale({ eui, units }: Props) {
           className="benchmark__zone"
         />
         <text x={x(BENCHMARKS.netZero.high) + 8} y={TRACK_Y - 8} className="benchmark__tick">
-          Net zero {BENCHMARKS.netZero.low}–{BENCHMARKS.netZero.high}
+          Net zero {landmarks.netZeroLow}–{landmarks.netZeroHigh}
         </text>
 
         <line
@@ -69,7 +73,7 @@ export function BenchmarkScale({ eui, units }: Props) {
           className="benchmark__rule"
         />
         <text x={x(MAX) - 8} y={TRACK_Y - 8} className="benchmark__tick" textAnchor="end">
-          i2SL mean {BENCHMARKS.i2sl.mean}
+          i2SL mean {landmarks.i2slLabMean.toLocaleString('en-US')}
         </text>
 
         <g transform={`translate(${here}, 0)`}>

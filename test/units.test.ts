@@ -1,7 +1,7 @@
 import { describe, it, expect } from 'vitest';
 import {
   area, energy, eui, carbonIntensity, costIntensity,
-  SQFT_TO_SQM, KBTU_TO_KWH, EUI_IP_TO_SI, BENCHMARKS_IP,
+  SQFT_TO_SQM, KBTU_TO_KWH, EUI_IP_TO_SI, BENCHMARKS_IP, BENCHMARKS_SI,
 } from '../src/units/units.js';
 import { estimate } from '../src/engine/estimate.js';
 import { DEFAULT_PROGRAMME } from '../src/model/dataset.js';
@@ -81,5 +81,16 @@ describe('benchmarks', () => {
   it('puts it far below the i2SL laboratory mean', () => {
     const result = estimate(DEFAULT_PROGRAMME, 'baseline');
     expect(result.eui).toBeLessThan(BENCHMARKS_IP.i2slLabMean / 2);
+  });
+});
+
+describe('the SI landmarks', () => {
+  // Rounded to whole kWh/m²/yr on purpose, so each must sit within half a unit
+  // of the exact conversion of its IP twin — close enough to be the same
+  // landmark, and a typo in either set breaks this.
+  it('are the IP landmarks, converted and rounded', () => {
+    for (const key of Object.keys(BENCHMARKS_IP) as (keyof typeof BENCHMARKS_IP)[]) {
+      expect(Math.abs(BENCHMARKS_SI[key] - BENCHMARKS_IP[key] * EUI_IP_TO_SI), key).toBeLessThanOrEqual(0.5);
+    }
   });
 });
