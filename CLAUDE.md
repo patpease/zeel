@@ -282,6 +282,25 @@ air green from ever appearing as two adjacent data marks.
 Fonts are self-hosted through `@fontsource` — the CSP allows no third-party
 origins, and a brand face that silently falls back to system-ui is not the brand.
 
+## Phone layout
+
+Each chart measures the box it is drawn in (`charts/useWidth.ts`) and, below
+the width its desktop drawing needs, redraws at the width it is shown instead
+of scrolling inside its card. `docs/design-system.md` has the breakpoints, the
+touch rules and what each chart does.
+
+Two traps, both invisible on a desk:
+
+- **A box that measures 0 is desktop, not phone.** jsdom reports every width as
+  0, and the export's off-screen copy relies on measuring wide.
+- **An export must never be the phone layout.** When the live chart is compact,
+  `ExportButton` mounts a desktop copy off screen and exports that. Phone and
+  desktop exports are byte-identical; keep it that way.
+
+And one that is not about charts: **a table ignores `width: 1px`.** The hidden
+accessible tables are each wrapped in a `.visually-hidden` box, because on their
+own they made the whole page scroll sideways on a phone.
+
 ## Test environments are split
 
 Vitest runs in `node` by default, because most of the suite reads

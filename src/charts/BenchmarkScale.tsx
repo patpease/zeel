@@ -1,15 +1,22 @@
-import { useId } from 'react';
+import { useId, useRef } from 'react';
 import { BENCHMARKS } from '../education/benchmarks.js';
 import type { UnitSystem } from '../units/units.js';
 import { eui as euiUnit } from '../units/units.js';
 import { formatEui } from '../ui/format.js';
+import { useWidth } from './useWidth.js';
 
 /**
  * Where this figure stands, on a scale that goes as far as laboratories actually
  * go. The i2SL mean of 531 is the right-hand end because anchoring at, say, 200
  * would quietly flatter every result.
  */
-const W = 720;
+const STANDARD_W = 720;
+/**
+ * Below this the 720-unit scale is shown at under two-thirds size, and its 9 px
+ * ticks fall under 6 px. It is drawn at the width it is shown instead: the same
+ * track, the same two landmarks at either end, and type at its stated size.
+ */
+const COMPACT_BELOW = 480;
 const H = 62;
 const PAD = 4;
 const TRACK_Y = 30;
@@ -22,6 +29,9 @@ interface Props {
 
 export function BenchmarkScale({ eui, units }: Props) {
   const titleId = useId();
+  const figureRef = useRef<HTMLElement>(null);
+  const measured = useWidth(figureRef, COMPACT_BELOW);
+  const W = measured.compact ? measured.width : STANDARD_W;
   if (eui <= 0) return null;
 
   const x = (value: number) => PAD + (Math.min(value, MAX) / MAX) * (W - PAD * 2);
@@ -29,11 +39,17 @@ export function BenchmarkScale({ eui, units }: Props) {
   const overrun = eui > MAX;
 
   return (
-    <figure className="benchmark" aria-labelledby={titleId}>
+    <figure className="benchmark" aria-labelledby={titleId} ref={figureRef}>
       <figcaption className="visually-hidden" id={titleId}>
         This programme against the net zero range and the i2SL laboratory benchmark mean
       </figcaption>
-      <svg viewBox={`0 0 ${W} ${H}`} className="benchmark__svg" role="img" aria-labelledby={titleId}>
+      <svg
+        viewBox={`0 0 ${W} ${H}`}
+        className="benchmark__svg"
+        data-layout={measured.compact ? 'compact' : 'standard'}
+        role="img"
+        aria-labelledby={titleId}
+      >
         <rect x={PAD} y={TRACK_Y} width={W - PAD * 2} height={7} rx={3.5} className="benchmark__track" />
 
         <rect

@@ -1510,13 +1510,6 @@ h1, h2, h3, p, figure {
   .workspace {
     grid-template-columns: 1fr;
   }
-  .app-header,
-  .scope,
-  .panel,
-  .provenance {
-    padding-left: 16px;
-    padding-right: 16px;
-  }
 }
 
 .site-footer {
@@ -1600,5 +1593,138 @@ h1, h2, h3, p, figure {
   .site-footer {
     flex-direction: column;
     gap: 16px;
+  }
+}
+
+/* ------------------------------------------------------------- layout ---
+ * Layout tokens: not colours, so declared ONCE. The three-block palette rule
+ * does not apply to them, and the palette tests only count colour tokens.
+ *
+ * Breakpoints cannot be tokens (a custom property is not allowed in a media
+ * query), so they are listed here and in docs/design-system.md:
+ *
+ *    860px  viewport  the workspace stacks; the gutter tightens to 16px
+ *    640px  viewport  the footer stacks
+ *    each chart's own width, measured  its phone layout — see
+ *                     charts/useWidth.ts. 460 for the bar charts, 640 for
+ *                     the Sankey, 480 for the benchmark scale: the width at
+ *                     which that chart's desktop drawing stops fitting.
+ */
+:root {
+  /* The page's side padding. 1.25rem on a desk, 16px once the workspace
+     stacks — the values the panels have always used, now in one place. */
+  --gutter: 1.25rem;
+  /* The smallest thing a finger is asked to hit: Apple's 44pt, which is also
+     WCAG 2.5.5's AAA target. Applied only to a coarse pointer. */
+  --tap: 44px;
+  /* Below 16px, iOS Safari zooms the page when a field takes focus and does
+     not zoom back out. */
+  --field-font-touch: 16px;
+}
+
+@media (max-width: 860px) {
+  :root {
+    --gutter: 16px;
+  }
+}
+
+/* The gutter, with room for a notch or a home indicator. The insets are zero
+   everywhere except a phone in landscape, and `viewport-fit=cover` in
+   index.html is what lets them be read; max() leaves a desk exactly where it
+   was. */
+.app-header,
+.scope,
+.panel,
+.provenance,
+.site-footer {
+  padding-left: max(var(--gutter), env(safe-area-inset-left));
+  padding-right: max(var(--gutter), env(safe-area-inset-right));
+}
+
+.site-footer {
+  padding-bottom: max(16px, env(safe-area-inset-bottom));
+}
+
+/* ---------------------------------------------------------------- touch ---
+ * A finger is not a pointer. Keyed on `pointer: coarse`, never on width: a
+ * narrow window on a desk has a mouse, and a tablet in landscape does not. */
+@media (pointer: coarse) {
+  /* The classed fields are named as well as the elements: `.area-input` sets
+     its own size, and a class outranks a bare `input`. */
+  input,
+  select,
+  textarea,
+  .area-input,
+  .palette-select__control {
+    font-size: var(--field-font-touch);
+  }
+
+  .area-input {
+    min-height: var(--tap);
+  }
+
+  .preset,
+  .case-chip,
+  .study__modes button,
+  .unit-toggle button,
+  .palette-select,
+  .disclosure__summary {
+    min-height: var(--tap);
+  }
+
+  .export-button {
+    width: var(--tap);
+    height: var(--tap);
+    padding: 11px;
+  }
+}
+
+/* ------------------------------------------------------- phone charts ---
+ * A chart's phone layout is drawn at the width it is shown, so it must not
+ * inherit the desktop drawing's fixed width. The desktop SVGs keep theirs. */
+.chart__svg--compact,
+.sankey--compact {
+  min-width: 0;
+  max-width: none;
+}
+
+/*
+ * Three metrics in a grid that fits two to a row left an empty grey cell
+ * where the fourth would be. The last one takes the whole row instead, but
+ * only when the grid is two across — on a desk all three share one row.
+ */
+@media (max-width: 520px) {
+  .metrics {
+    grid-template-columns: 1fr 1fr;
+  }
+
+  .metric:last-child:nth-child(odd) {
+    grid-column: 1 / -1;
+  }
+}
+
+/* On a phone the header's three controls take the full row under the brand,
+   and the palette picker is the one that gives way: it shrinks and truncates
+   its name rather than pushing the theme toggle onto a line of its own, or the
+   page sideways. The two toggles keep their size — they are the controls
+   someone is aiming a thumb at. */
+@media (max-width: 640px) {
+  .header-toggles {
+    width: 100%;
+  }
+
+  .palette-select {
+    flex: 1 1 auto;
+    min-width: 0;
+  }
+
+  .palette-select__control {
+    flex: 1 1 auto;
+    min-width: 0;
+    text-overflow: ellipsis;
+  }
+
+  .unit-toggle {
+    flex: none;
   }
 }
